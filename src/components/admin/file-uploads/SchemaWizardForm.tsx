@@ -12,6 +12,7 @@ export type FileUploadSchema = {
     description_2: string | null;
     category: string | null;
     amount: string | null;
+    subcategory: string | null;
   };
   amount_column_format: AmountColumnFormat;
   debit_column?: string | null;
@@ -29,6 +30,7 @@ const TRANSACTION_FIELDS: { key: keyof FileUploadSchema["schema"]; label: string
   { key: "description", label: "Description" },
   { key: "description_2", label: "Description 2" },
   { key: "category", label: "Category" },
+  { key: "subcategory", label: "Subcategory" },
   { key: "amount", label: "Amount" },
 ];
 
@@ -39,6 +41,7 @@ export default function SchemaWizardForm({ headers, onSave }: SchemaWizardFormPr
     description: null,
     description_2: null,
     category: null,
+    subcategory: null,
     amount: null,
   });
 
