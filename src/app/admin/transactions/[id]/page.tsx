@@ -52,8 +52,8 @@ export default function TransactionDetailPage({
       <dl className="space-y-3 max-w-lg">
         {[
           ["ID", data.id],
-          ["Account", data.account],
-          ["File Upload", data.file_upload],
+          ["Account", data.account?.name ?? "—"],
+          ["File Upload", data.file_upload?.filename ?? "—"],
           ["Transaction Date", data.transaction_date ?? "—"],
           ["Posted Date", data.posted_date ?? "—"],
           ["Description", data.description ?? "—"],

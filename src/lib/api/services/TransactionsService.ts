@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { PatchedTransaction } from '../models/PatchedTransaction';
 import type { Transaction } from '../models/Transaction';
+import type { TransactionWrite } from '../models/TransactionWrite';
 import type { PaginatedResponse } from '../models/PaginatedResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -36,7 +37,7 @@ export class TransactionsService {
      * @throws ApiError
      */
     public static transactionsCreate(
-        requestBody: Transaction,
+        requestBody: TransactionWrite,
     ): CancelablePromise<Transaction> {
         return __request(OpenAPI, {
             method: 'POST',

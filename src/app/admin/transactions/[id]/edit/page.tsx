@@ -5,9 +5,6 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { useTransaction, useUpdateTransaction } from "@/lib/hooks";
 import TransactionForm from "@/components/admin/transactions/TransactionForm";
-import type { Transaction } from "@/lib/api";
-
-type TransactionFormData = Omit<Transaction, "id" | "created_at" | "updated_at">;
 
 export default function EditTransactionPage({
   params,
@@ -21,7 +18,7 @@ export default function EditTransactionPage({
   const { data, isLoading, isError } = useTransaction(transactionId);
   const updateTransaction = useUpdateTransaction();
 
-  async function handleSubmit(updates: TransactionFormData) {
+  async function handleSubmit(updates: Record<string, unknown>) {
     await updateTransaction.mutateAsync({ id: transactionId, data: updates });
     router.push(`/admin/transactions/${transactionId}`);
   }

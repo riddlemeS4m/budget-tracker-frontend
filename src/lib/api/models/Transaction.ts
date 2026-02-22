@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Account } from './Account';
+import type { FileUpload } from './FileUpload';
 export type Transaction = {
     readonly id: number;
     transaction_date?: string | null;
@@ -14,7 +16,7 @@ export type Transaction = {
     raw_data: any;
     readonly created_at: string;
     readonly updated_at: string;
-    account: number;
-    file_upload?: number | null;
+    account: Account;
+    file_upload?: FileUpload | null;
 };
 

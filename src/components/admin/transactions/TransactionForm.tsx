@@ -6,7 +6,18 @@ import type { Transaction } from "@/lib/api";
 import { useAccounts } from "@/lib/hooks/useAccounts";
 import { useFileUploads } from "@/lib/hooks/useFileUploads";
 
-type TransactionFormData = Omit<Transaction, "id" | "created_at" | "updated_at">;
+type TransactionFormData = {
+  account: number;
+  file_upload: number | null;
+  transaction_date: string | null;
+  posted_date: string | null;
+  description: string | null;
+  description_2: string | null;
+  category: string | null;
+  subcategory: string | null;
+  amount: string | null;
+  raw_data: unknown;
+};
 
 interface TransactionFormProps {
   initial?: Partial<Transaction>;
@@ -20,8 +31,8 @@ export default function TransactionForm({
   const router = useRouter();
   const { data: accounts, isLoading: accountsLoading } = useAccounts();
   const { data: fileUploads, isLoading: fileUploadsLoading } = useFileUploads();
-  const [account, setAccount] = useState(String(initial.account ?? ""));
-  const [fileUpload, setFileUpload] = useState(String(initial.file_upload ?? ""));
+  const [account, setAccount] = useState(String(initial.account?.id ?? ""));
+  const [fileUpload, setFileUpload] = useState(String(initial.file_upload?.id ?? ""));
   const [transactionDate, setTransactionDate] = useState(
     initial.transaction_date
       ? initial.transaction_date.slice(0, 10)

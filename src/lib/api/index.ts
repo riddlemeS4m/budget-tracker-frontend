@@ -13,6 +13,7 @@ export type { PatchedAccount } from './models/PatchedAccount';
 export type { PatchedFileUpload } from './models/PatchedFileUpload';
 export type { PatchedTransaction } from './models/PatchedTransaction';
 export type { Transaction } from './models/Transaction';
+export type { TransactionWrite } from './models/TransactionWrite';
 export type { PaginatedResponse } from './models/PaginatedResponse';
 
 export { AccountsService } from './services/AccountsService';

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   TransactionsService,
-  type Transaction,
+  type TransactionWrite,
   type PatchedTransaction,
 } from "../api";
 
@@ -33,7 +33,7 @@ export function useCreateTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: Transaction) =>
+    mutationFn: (data: TransactionWrite) =>
       TransactionsService.transactionsCreate(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
