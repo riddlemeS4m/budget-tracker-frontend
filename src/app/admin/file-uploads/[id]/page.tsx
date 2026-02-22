@@ -52,7 +52,7 @@ export default function FileUploadDetailPage({
       <dl className="space-y-3 max-w-lg">
         {[
           ["ID", data.id],
-          ["Account", data.account],
+          ["Account", data.account.name],
           ["Filename", data.filename],
           ["Transaction Count", data.transaction_count],
           ["Status", data.status],

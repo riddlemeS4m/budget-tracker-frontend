@@ -11,7 +11,7 @@ export default function FileUploadRow({ fileUpload }: FileUploadRowProps) {
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{fileUpload.id}</td>
       <td className="px-3 py-2 text-sm">{fileUpload.filename}</td>
       <td className="px-3 py-2 text-sm">{fileUpload.status}</td>
-      <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{fileUpload.account}</td>
+      <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{fileUpload.account.name}</td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
         {new Date(fileUpload.created_at).toLocaleDateString()}
       </td>

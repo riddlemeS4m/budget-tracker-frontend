@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Account } from './Account';
 export type FileUpload = {
     readonly id: number;
     filename: string;
@@ -10,6 +11,7 @@ export type FileUpload = {
     errors?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
-    account: number;
+    account: Account;
+    readonly headers: string[];
 };
 

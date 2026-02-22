@@ -7,7 +7,29 @@ import type { PatchedFileUpload } from '../models/PatchedFileUpload';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
+
+function getBaseUrl(): string {
+    return OpenAPI.BASE || "http://localhost:8000";
+}
+
 export class FileUploadsService {
+    static async uploadFile(file: File, accountId: number): Promise<FileUpload> {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("account", String(accountId));
+
+        const response = await fetch(`${getBaseUrl()}/api/v1/file-uploads/`, {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const body = await response.json().catch(() => ({}));
+            throw new Error(body.detail ?? `Upload failed: ${response.status}`);
+        }
+
+        return response.json();
+    }
     /**
      * @returns FileUpload
      * @throws ApiError

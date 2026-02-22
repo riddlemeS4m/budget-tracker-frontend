@@ -4,6 +4,7 @@ import {
   type FileUpload,
   type PatchedFileUpload,
 } from "../api";
+import { transactionKeys } from "./useTransactions";
 
 export const fileUploadKeys = {
   all: ["fileUploads"] as const,
@@ -60,6 +61,19 @@ export function useDeleteFileUpload() {
     mutationFn: (id: number) => FileUploadsService.fileUploadsDestroy(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fileUploadKeys.lists() });
+    },
+  });
+}
+
+export function useUploadFile() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ file, accountId }: { file: File; accountId: number }) =>
+      FileUploadsService.uploadFile(file, accountId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: fileUploadKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
     },
   });
 }

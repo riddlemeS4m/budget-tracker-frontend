@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FileUpload } from "@/lib/api";
 
-type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at">;
+type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at" | "account" | "headers"> & { account: number };
 
 interface FileUploadFormProps {
   initial?: Partial<FileUpload>;
@@ -16,7 +16,7 @@ export default function FileUploadForm({
   onSubmit,
 }: FileUploadFormProps) {
   const router = useRouter();
-  const [account, setAccount] = useState(String(initial.account ?? ""));
+  const [account, setAccount] = useState(String(initial.account?.id ?? ""));
   const [filename, setFilename] = useState(initial.filename ?? "");
   const [transactionCount, setTransactionCount] = useState(
     String(initial.transaction_count ?? "0")

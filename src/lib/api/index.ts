@@ -16,5 +16,6 @@ export type { Transaction } from './models/Transaction';
 
 export { AccountsService } from './services/AccountsService';
 export { FileUploadsService } from './services/FileUploadsService';
+export { FileUploadActionsService } from './services/FileUploadActionsService';
 export { SchemaService } from './services/SchemaService';
 export { TransactionsService } from './services/TransactionsService';
