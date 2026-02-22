@@ -4,19 +4,29 @@
 /* eslint-disable */
 import type { PatchedTransaction } from '../models/PatchedTransaction';
 import type { Transaction } from '../models/Transaction';
+import type { PaginatedResponse } from '../models/PaginatedResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class TransactionsService {
     /**
-     * Handles GET /transactions/ and POST /transactions/
-     * @returns Transaction
+     * Handles GET /transactions/ with pagination
+     * @param page Page number (1-indexed)
+     * @param pageSize Items per page
+     * @returns PaginatedResponse<Transaction>
      * @throws ApiError
      */
-    public static transactionsList(): CancelablePromise<Transaction> {
+    public static transactionsList(
+        page: number = 1,
+        pageSize: number = 100,
+    ): CancelablePromise<PaginatedResponse<Transaction>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/transactions/',
+            query: {
+                page,
+                page_size: pageSize,
+            },
         });
     }
     /**

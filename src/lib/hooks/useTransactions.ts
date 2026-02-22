@@ -14,10 +14,10 @@ export const transactionKeys = {
   detail: (id: number) => [...transactionKeys.details(), id] as const,
 };
 
-export function useTransactions() {
+export function useTransactions(page: number = 1, pageSize: number = 100) {
   return useQuery({
-    queryKey: transactionKeys.lists(),
-    queryFn: () => TransactionsService.transactionsList(),
+    queryKey: transactionKeys.list({ page, pageSize }),
+    queryFn: () => TransactionsService.transactionsList(page, pageSize),
   });
 }
 
