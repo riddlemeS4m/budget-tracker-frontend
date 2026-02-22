@@ -4,6 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Account } from "@/lib/api";
 
+const ACCOUNT_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: "checking", label: "Checking" },
+  { value: "savings", label: "Savings" },
+  { value: "credit_card", label: "Credit Card" },
+  { value: "investment", label: "Investment" },
+  { value: "loan", label: "Loan" },
+  { value: "other", label: "Other" },
+];
+
 interface AccountFormProps {
   initial?: Partial<Account>;
   onSubmit: (data: Omit<Account, "id" | "created_at" | "updated_at">) => Promise<unknown>;
@@ -12,7 +21,7 @@ interface AccountFormProps {
 export default function AccountForm({ initial = {}, onSubmit }: AccountFormProps) {
   const router = useRouter();
   const [name, setName] = useState(initial.name ?? "");
-  const [type, setType] = useState(initial.type ?? "");
+  const [type, setType] = useState(initial.type ?? "checking");
   const [schemaText, setSchemaText] = useState(
     initial.file_upload_schema
       ? JSON.stringify(initial.file_upload_schema, null, 2)
@@ -68,13 +77,18 @@ export default function AccountForm({ initial = {}, onSubmit }: AccountFormProps
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Type
         </label>
-        <input
-          type="text"
+        <select
           value={type}
           onChange={(e) => setType(e.target.value)}
           required
           className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-        />
+        >
+          {ACCOUNT_TYPE_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
