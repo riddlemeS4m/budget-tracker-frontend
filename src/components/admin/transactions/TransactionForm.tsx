@@ -30,6 +30,7 @@ export default function TransactionForm({
   const [description, setDescription] = useState(initial.description ?? "");
   const [description2, setDescription2] = useState(initial.description_2 ?? "");
   const [category, setCategory] = useState(initial.category ?? "");
+  const [subcategory, setSubcategory] = useState(initial.subcategory ?? "");
   const [amount, setAmount] = useState(initial.amount ?? "");
   const [rawDataText, setRawDataText] = useState(
     initial.raw_data ? JSON.stringify(initial.raw_data, null, 2) : "{}"
@@ -59,6 +60,7 @@ export default function TransactionForm({
         description: description || null,
         description_2: description2 || null,
         category: category || null,
+        subcategory: subcategory || null,
         amount: amount || null,
         raw_data,
       });
@@ -160,6 +162,17 @@ export default function TransactionForm({
           type="text"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
+          className={inputClass}
+        />
+      </div>
+      <div>
+        <label className={labelClass}>
+          Subcategory <span className={optionalClass}>(optional)</span>
+        </label>
+        <input
+          type="text"
+          value={subcategory}
+          onChange={(e) => setSubcategory(e.target.value)}
           className={inputClass}
         />
       </div>

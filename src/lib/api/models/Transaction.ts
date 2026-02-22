@@ -9,6 +9,7 @@ export type Transaction = {
     description?: string | null;
     description_2?: string | null;
     category?: string | null;
+    subcategory?: string | null;
     amount?: string | null;
     raw_data: any;
     readonly created_at: string;

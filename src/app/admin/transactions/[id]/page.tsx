@@ -59,6 +59,7 @@ export default function TransactionDetailPage({
           ["Description", data.description ?? "—"],
           ["Description 2", data.description_2 ?? "—"],
           ["Category", data.category ?? "—"],
+          ["Subcategory", data.subcategory ?? "—"],
           ["Amount", data.amount ?? "—"],
           ["Raw Data", JSON.stringify(data.raw_data, null, 2)],
           ["Created At", new Date(data.created_at).toLocaleString()],
