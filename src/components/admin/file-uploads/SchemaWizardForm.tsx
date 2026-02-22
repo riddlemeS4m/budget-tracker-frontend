@@ -21,7 +21,17 @@ export type FileUploadSchema = {
 
 interface SchemaWizardFormProps {
   headers: string[];
+  accountType?: string;
   onSave: (schema: FileUploadSchema) => Promise<void>;
+}
+
+function getDefaultAmountMode(
+  accountType: string | undefined,
+  headers: string[]
+): "debit_is_negative" | "debit_is_positive" | "split" {
+  if (accountType === "credit_card") return "debit_is_positive";
+  if (headers.some((h) => /debit|credit/i.test(h))) return "split";
+  return "debit_is_negative";
 }
 
 const TRANSACTION_FIELDS: { key: keyof FileUploadSchema["schema"]; label: string }[] = [
@@ -34,7 +44,7 @@ const TRANSACTION_FIELDS: { key: keyof FileUploadSchema["schema"]; label: string
   { key: "amount", label: "Amount" },
 ];
 
-export default function SchemaWizardForm({ headers, onSave }: SchemaWizardFormProps) {
+export default function SchemaWizardForm({ headers, accountType, onSave }: SchemaWizardFormProps) {
   const [mapping, setMapping] = useState<FileUploadSchema["schema"]>({
     transaction_date: null,
     posted_date: null,
@@ -48,7 +58,7 @@ export default function SchemaWizardForm({ headers, onSave }: SchemaWizardFormPr
   // "debit_is_negative" | "debit_is_positive" | "split"
   // "split" maps to amount_column_format: null with debit/credit columns
   const [amountMode, setAmountMode] = useState<"debit_is_negative" | "debit_is_positive" | "split">(
-    "debit_is_negative"
+    () => getDefaultAmountMode(accountType, headers)
   );
   const [debitColumn, setDebitColumn] = useState<string>("");
   const [creditColumn, setCreditColumn] = useState<string>("");

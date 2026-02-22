@@ -71,7 +71,7 @@ export default function SchemaWizardPage({
           No headers found in the uploaded file.
         </p>
       ) : (
-        <SchemaWizardForm headers={headers} onSave={handleSave} />
+        <SchemaWizardForm headers={headers} accountType={account?.type} onSave={handleSave} />
       )}
     </div>
   );
