@@ -3,14 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTransactions } from "@/lib/hooks";
+import type { TransactionFilters } from "@/lib/api";
 import TransactionRow from "@/components/admin/transactions/TransactionRow";
+import TransactionFiltersBar from "@/components/admin/transactions/TransactionFilters";
 import Pagination from "@/components/core/Pagination";
 
 const PAGE_SIZE = 100;
 
 export default function TransactionsListPage() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useTransactions(page, PAGE_SIZE);
+  const [filters, setFilters] = useState<TransactionFilters>({});
+
+  function handleFiltersChange(newFilters: TransactionFilters) {
+    setFilters(newFilters);
+    setPage(1);
+  }
+
+  const { data, isLoading, isError } = useTransactions(page, PAGE_SIZE, filters);
 
   const transactions = data?.results ?? [];
   const totalPages = data?.total_pages ?? 1;
@@ -27,6 +36,8 @@ export default function TransactionsListPage() {
           Add Transaction
         </Link>
       </div>
+
+      <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} />
 
       {isLoading && <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>}
       {isError && <p className="text-sm text-red-600 dark:text-red-400">Failed to load transactions.</p>}

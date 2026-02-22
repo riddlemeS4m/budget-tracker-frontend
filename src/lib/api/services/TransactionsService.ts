@@ -9,17 +9,27 @@ import type { PaginatedResponse } from '../models/PaginatedResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
+export type TransactionFilters = {
+    account?: number;
+    file_upload?: number;
+    transaction_date_from?: string;
+    transaction_date_to?: string;
+    description?: string;
+};
+
 export class TransactionsService {
     /**
-     * Handles GET /transactions/ with pagination
+     * Handles GET /transactions/ with pagination and optional filters
      * @param page Page number (1-indexed)
      * @param pageSize Items per page
+     * @param filters Optional filter params
      * @returns PaginatedResponse<Transaction>
      * @throws ApiError
      */
     public static transactionsList(
         page: number = 1,
         pageSize: number = 100,
+        filters?: TransactionFilters,
     ): CancelablePromise<PaginatedResponse<Transaction>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -27,6 +37,7 @@ export class TransactionsService {
             query: {
                 page,
                 page_size: pageSize,
+                ...filters,
             },
         });
     }

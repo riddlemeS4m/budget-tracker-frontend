@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   TransactionsService,
+  type TransactionFilters,
   type TransactionWrite,
   type PatchedTransaction,
 } from "../api";
@@ -14,10 +15,10 @@ export const transactionKeys = {
   detail: (id: number) => [...transactionKeys.details(), id] as const,
 };
 
-export function useTransactions(page: number = 1, pageSize: number = 100) {
+export function useTransactions(page: number = 1, pageSize: number = 100, filters?: TransactionFilters) {
   return useQuery({
-    queryKey: transactionKeys.list({ page, pageSize }),
-    queryFn: () => TransactionsService.transactionsList(page, pageSize),
+    queryKey: transactionKeys.list({ page, pageSize, ...filters }),
+    queryFn: () => TransactionsService.transactionsList(page, pageSize, filters),
   });
 }
 
