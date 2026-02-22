@@ -45,84 +45,79 @@ export default function FileUploadForm({
     }
   }
 
+  const inputClass = "border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
       {formError && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded px-3 py-2">
           {formError}
         </p>
       )}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Account ID
-        </label>
+        <label className={labelClass}>Account ID</label>
         <input
           type="number"
           value={account}
           onChange={(e) => setAccount(e.target.value)}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
+          className={inputClass}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Filename
-        </label>
+        <label className={labelClass}>Filename</label>
         <input
           type="text"
           value={filename}
           onChange={(e) => setFilename(e.target.value)}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
+          className={inputClass}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Transaction Count
-        </label>
+        <label className={labelClass}>Transaction Count</label>
         <input
           type="number"
           value={transactionCount}
           onChange={(e) => setTransactionCount(e.target.value)}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
+          className={inputClass}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Status
-        </label>
+        <label className={labelClass}>Status</label>
         <input
           type="text"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
+          className={inputClass}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Errors <span className="text-gray-400 font-normal">(optional)</span>
+        <label className={labelClass}>
+          Errors <span className="text-gray-400 dark:text-gray-500 font-normal">(optional)</span>
         </label>
         <textarea
           value={errors}
           onChange={(e) => setErrors(e.target.value)}
           rows={4}
-          className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
+          className={inputClass}
         />
       </div>
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={submitting}
-          className="px-4 py-2 text-sm bg-gray-900 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+          className="px-4 py-2 text-sm bg-gray-900 dark:bg-gray-700 text-white rounded hover:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50"
         >
           {submitting ? "Saving…" : "Save"}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+          className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
         >
           Cancel
         </button>

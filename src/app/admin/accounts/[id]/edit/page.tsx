@@ -24,9 +24,9 @@ export default function EditAccountPage({
     router.push(`/admin/accounts/${accountId}`);
   }
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading…</p>;
+  if (isLoading) return <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>;
   if (isError || !data)
-    return <p className="text-sm text-red-600">Failed to load account.</p>;
+    return <p className="text-sm text-red-600 dark:text-red-400">Failed to load account.</p>;
 
   return (
     <div>
@@ -35,7 +35,7 @@ export default function EditAccountPage({
       <div className="mt-4">
         <Link
           href={`/admin/accounts/${accountId}`}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to Account
         </Link>

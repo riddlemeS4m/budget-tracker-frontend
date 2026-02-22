@@ -26,9 +26,9 @@ export default function EditTransactionPage({
     router.push(`/admin/transactions/${transactionId}`);
   }
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading…</p>;
+  if (isLoading) return <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>;
   if (isError || !data)
-    return <p className="text-sm text-red-600">Failed to load transaction.</p>;
+    return <p className="text-sm text-red-600 dark:text-red-400">Failed to load transaction.</p>;
 
   return (
     <div>
@@ -37,7 +37,7 @@ export default function EditTransactionPage({
       <div className="mt-4">
         <Link
           href={`/admin/transactions/${transactionId}`}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
         >
           ← Back to Transaction
         </Link>

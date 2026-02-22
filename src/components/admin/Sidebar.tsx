@@ -8,8 +8,8 @@ const navItems = [
 
 export default function Sidebar() {
   return (
-    <nav className="w-44 shrink-0 border-r border-gray-200 min-h-screen p-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3 px-3">
+    <nav className="w-44 shrink-0 border-r border-gray-200 dark:border-gray-700 min-h-screen p-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3 px-3">
         Admin
       </p>
       <ul>

@@ -25,9 +25,9 @@ export default function AccountDetailPage({
     }
   }
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading…</p>;
+  if (isLoading) return <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>;
   if (isError || !data)
-    return <p className="text-sm text-red-600">Failed to load account.</p>;
+    return <p className="text-sm text-red-600 dark:text-red-400">Failed to load account.</p>;
 
   return (
     <div>
@@ -36,13 +36,13 @@ export default function AccountDetailPage({
         <div className="flex gap-3">
           <Link
             href={`/admin/accounts/${data.id}/edit`}
-            className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+            className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
           >
             Edit
           </Link>
           <button
             onClick={handleDelete}
-            className="px-3 py-2 text-sm text-red-600 border border-red-200 rounded hover:bg-red-50"
+            className="px-3 py-2 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded hover:bg-red-50 dark:hover:bg-red-950"
           >
             Delete
           </button>
@@ -59,14 +59,14 @@ export default function AccountDetailPage({
           ["Updated At", new Date(data.updated_at).toLocaleString()],
         ].map(([label, value]) => (
           <div key={String(label)} className="flex gap-4">
-            <dt className="w-44 shrink-0 text-sm font-medium text-gray-500">{label}</dt>
-            <dd className="text-sm text-gray-900 whitespace-pre-wrap break-all">{String(value)}</dd>
+            <dt className="w-44 shrink-0 text-sm font-medium text-gray-500 dark:text-gray-400">{label}</dt>
+            <dd className="text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-all">{String(value)}</dd>
           </div>
         ))}
       </dl>
 
       <div className="mt-6">
-        <Link href="/admin/accounts" className="text-sm text-blue-600 hover:underline">
+        <Link href="/admin/accounts" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
           ← Back to Accounts
         </Link>
       </div>
