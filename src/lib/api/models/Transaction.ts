@@ -14,6 +14,6 @@ export type Transaction = {
     readonly created_at: string;
     readonly updated_at: string;
     account: number;
-    file_upload: number;
+    file_upload?: number | null;
 };
 

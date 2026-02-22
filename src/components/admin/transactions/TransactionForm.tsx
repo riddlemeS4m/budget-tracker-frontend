@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Transaction } from "@/lib/api";
 import { useAccounts } from "@/lib/hooks/useAccounts";
+import { useFileUploads } from "@/lib/hooks/useFileUploads";
 
 type TransactionFormData = Omit<Transaction, "id" | "created_at" | "updated_at">;
 
@@ -18,6 +19,7 @@ export default function TransactionForm({
 }: TransactionFormProps) {
   const router = useRouter();
   const { data: accounts, isLoading: accountsLoading } = useAccounts();
+  const { data: fileUploads, isLoading: fileUploadsLoading } = useFileUploads();
   const [account, setAccount] = useState(String(initial.account ?? ""));
   const [fileUpload, setFileUpload] = useState(String(initial.file_upload ?? ""));
   const [transactionDate, setTransactionDate] = useState(
@@ -51,7 +53,7 @@ export default function TransactionForm({
     try {
       await onSubmit({
         account: Number(account),
-        file_upload: Number(fileUpload),
+        file_upload: fileUpload !== "" ? Number(fileUpload) : null,
         transaction_date: transactionDate || null,
         posted_date: null,
         description: description || null,
@@ -98,14 +100,24 @@ export default function TransactionForm({
         </select>
       </div>
       <div>
-        <label className={labelClass}>File Upload ID</label>
-        <input
-          type="number"
+        <label className={labelClass}>
+          File Upload <span className={optionalClass}>(optional)</span>
+        </label>
+        <select
           value={fileUpload}
           onChange={(e) => setFileUpload(e.target.value)}
-          required
+          disabled={fileUploadsLoading}
           className={inputClass}
-        />
+        >
+          <option value="">
+            {fileUploadsLoading ? "Loading file uploads…" : "None"}
+          </option>
+          {fileUploads?.map((f) => (
+            <option key={f.id} value={String(f.id)}>
+              {f.filename} — {f.account.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label className={labelClass}>
