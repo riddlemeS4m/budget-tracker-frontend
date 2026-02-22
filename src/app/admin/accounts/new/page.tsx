@@ -10,8 +10,13 @@ export default function NewAccountPage() {
   const createAccount = useCreateAccount();
 
   async function handleSubmit(data: Omit<Account, "id" | "created_at" | "updated_at">) {
-    await createAccount.mutateAsync(data as Account);
-    router.push("/admin/accounts");
+    try {
+      await createAccount.mutateAsync(data as Account);
+      router.push("/admin/accounts");
+    } catch (error) {
+      // TODO: Handle error
+      console.error("Failed to create account:", error);
+    }
   }
 
   return (

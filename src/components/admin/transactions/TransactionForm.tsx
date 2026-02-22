@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Transaction } from "@/lib/api";
+import { useAccounts } from "@/lib/hooks/useAccounts";
 
 type TransactionFormData = Omit<Transaction, "id" | "created_at" | "updated_at">;
 
@@ -16,6 +17,7 @@ export default function TransactionForm({
   onSubmit,
 }: TransactionFormProps) {
   const router = useRouter();
+  const { data: accounts, isLoading: accountsLoading } = useAccounts();
   const [account, setAccount] = useState(String(initial.account ?? ""));
   const [fileUpload, setFileUpload] = useState(String(initial.file_upload ?? ""));
   const [transactionDate, setTransactionDate] = useState(
@@ -77,14 +79,23 @@ export default function TransactionForm({
         </p>
       )}
       <div>
-        <label className={labelClass}>Account ID</label>
-        <input
-          type="number"
+        <label className={labelClass}>Account</label>
+        <select
           value={account}
           onChange={(e) => setAccount(e.target.value)}
           required
+          disabled={accountsLoading}
           className={inputClass}
-        />
+        >
+          <option value="">
+            {accountsLoading ? "Loading accounts…" : "Select an account"}
+          </option>
+          {accounts?.map((a) => (
+            <option key={a.id} value={String(a.id)}>
+              {a.name} ({a.type})
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label className={labelClass}>File Upload ID</label>
