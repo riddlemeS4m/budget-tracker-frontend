@@ -15,6 +15,7 @@ export type TransactionFilters = {
     transaction_date_from?: string;
     transaction_date_to?: string;
     description?: string;
+    sort_by?: string;
 };
 
 export class TransactionsService {

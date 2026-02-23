@@ -6,6 +6,7 @@ import { useTransactions } from "@/lib/hooks";
 import type { TransactionFilters } from "@/lib/api";
 import TransactionRow from "@/components/admin/transactions/TransactionRow";
 import TransactionFiltersBar from "@/components/admin/transactions/TransactionFilters";
+import SortableHeader from "@/components/admin/transactions/SortableHeader";
 import Pagination from "@/components/core/Pagination";
 
 const PAGE_SIZE = 100;
@@ -13,13 +14,30 @@ const PAGE_SIZE = 100;
 export default function TransactionsListPage() {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<TransactionFilters>({});
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   function handleFiltersChange(newFilters: TransactionFilters) {
     setFilters(newFilters);
     setPage(1);
   }
 
-  const { data, isLoading, isError } = useTransactions(page, PAGE_SIZE, filters);
+  function handleSort(field: string) {
+    if (field === sortField) {
+      if (sortDir === "asc") {
+        setSortDir("desc");
+      } else {
+        setSortField(null);
+      }
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+    setPage(1);
+  }
+
+  const sort_by = sortField ? `${sortDir === "desc" ? "-" : ""}${sortField}` : undefined;
+  const { data, isLoading, isError } = useTransactions(page, PAGE_SIZE, { ...filters, sort_by });
 
   const transactions = data?.results ?? [];
   const totalPages = data?.total_pages ?? 1;
@@ -47,13 +65,13 @@ export default function TransactionsListPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-200 dark:border-gray-700">
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Account</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Transaction Date</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subcategory</th>
+                <SortableHeader label="ID" field="id" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Account" field="account__name" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Transaction Date" field="transaction_date" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Description" field="description" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Amount" field="amount" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Category" field="category" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+                <SortableHeader label="Subcategory" field="subcategory" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
                 <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
