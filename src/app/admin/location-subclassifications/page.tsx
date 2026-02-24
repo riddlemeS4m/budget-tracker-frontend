@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useLocationSubclassifications } from "@/lib/hooks";
+import { useLocationSubclassifications, type LocationSubclassificationFilters } from "@/lib/hooks";
 import LocationSubclassificationRow from "@/components/admin/location-subclassifications/LocationSubclassificationRow";
+import LocationSubclassificationFiltersBar from "@/components/admin/location-subclassifications/LocationSubclassificationFilters";
 import SortableHeader from "@/components/admin/transactions/SortableHeader";
 import type { LocationSubClassification } from "@/lib/api";
 
@@ -13,7 +14,8 @@ type SortKey = keyof Pick<
 >;
 
 export default function LocationSubclassificationsListPage() {
-  const { data, isLoading, isError } = useLocationSubclassifications();
+  const [filters, setFilters] = useState<LocationSubclassificationFilters>({});
+  const { data, isLoading, isError } = useLocationSubclassifications(filters);
   const [sortKey, setSortKey] = useState<string | null>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
@@ -57,6 +59,8 @@ export default function LocationSubclassificationsListPage() {
           Add Location Subclassification
         </Link>
       </div>
+
+      <LocationSubclassificationFiltersBar filters={filters} onChange={setFilters} />
 
       {isLoading && (
         <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>

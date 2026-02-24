@@ -9,13 +9,25 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LocationSubclassificationsService {
     /**
+     * @param locationClassification Filter by location classification ID
+     * @param name Filter by name (case-insensitive substring match)
+     * @param type Filter by location classification type (income, expense, transfer)
      * @returns LocationSubClassification
      * @throws ApiError
      */
-    public static locationSubclassificationsList(): CancelablePromise<Array<LocationSubClassification>> {
+    public static locationSubclassificationsList(
+        locationClassification?: number,
+        name?: string,
+        type?: string,
+    ): CancelablePromise<Array<LocationSubClassification>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/location-subclassifications/',
+            query: {
+                'location_classification': locationClassification,
+                'name': name,
+                'type': type,
+            },
         });
     }
     /**

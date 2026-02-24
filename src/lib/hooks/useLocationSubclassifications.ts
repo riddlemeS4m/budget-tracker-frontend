@@ -6,6 +6,12 @@ import {
 } from "../api";
 import { locationClassificationKeys } from "./useLocationClassifications";
 
+export type LocationSubclassificationFilters = {
+  location_classification?: number;
+  type?: string;
+  name?: string;
+};
+
 export const locationSubclassificationKeys = {
   all: ["location-subclassifications"] as const,
   lists: () => [...locationSubclassificationKeys.all, "list"] as const,
@@ -15,10 +21,15 @@ export const locationSubclassificationKeys = {
   detail: (id: number) => [...locationSubclassificationKeys.details(), id] as const,
 };
 
-export function useLocationSubclassifications() {
+export function useLocationSubclassifications(filters?: LocationSubclassificationFilters) {
   return useQuery({
-    queryKey: locationSubclassificationKeys.lists(),
-    queryFn: () => LocationSubclassificationsService.locationSubclassificationsList(),
+    queryKey: locationSubclassificationKeys.list(filters),
+    queryFn: () =>
+      LocationSubclassificationsService.locationSubclassificationsList(
+        filters?.location_classification,
+        filters?.name,
+        filters?.type,
+      ),
   });
 }
 
