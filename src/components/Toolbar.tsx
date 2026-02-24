@@ -2,6 +2,7 @@ import ToolbarLink from "./ToolbarLink";
 
 const apps = [
   { href: "/admin", label: "Admin" },
+  { href: "/reports", label: "Reports" },
 ];
 
 export default function Toolbar() {
