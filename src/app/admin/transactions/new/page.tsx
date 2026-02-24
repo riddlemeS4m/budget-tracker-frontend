@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useCreateTransaction } from "@/lib/hooks";
 import TransactionForm from "@/components/admin/transactions/TransactionForm";
-import type { TransactionWrite } from "@/lib/api";
+import type { Transaction } from "@/lib/api";
 
 export default function NewTransactionPage() {
   const router = useRouter();
   const createTransaction = useCreateTransaction();
 
-  async function handleSubmit(data: TransactionWrite) {
-    await createTransaction.mutateAsync(data);
+  async function handleSubmit(data: unknown) {
+    await createTransaction.mutateAsync(data as Transaction);
     router.push("/admin/transactions");
   }
 

@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useTransactions } from "@/lib/hooks";
-import type { TransactionFilters } from "@/lib/api";
+import { useTransactions, type TransactionFilters } from "@/lib/hooks";
 import TransactionRow from "@/components/admin/transactions/TransactionRow";
 import TransactionFiltersBar from "@/components/admin/transactions/TransactionFilters";
 import SortableHeader from "@/components/admin/transactions/SortableHeader";

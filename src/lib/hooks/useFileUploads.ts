@@ -70,7 +70,7 @@ export function useUploadFile() {
 
   return useMutation({
     mutationFn: ({ file, accountId }: { file: File; accountId: number }) =>
-      FileUploadsService.uploadFile(file, accountId),
+      FileUploadsService.fileUploadsCreate({ account_id: accountId, file } as unknown as FileUpload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fileUploadKeys.lists() });
       queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });

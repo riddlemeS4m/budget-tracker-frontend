@@ -7,7 +7,7 @@ import { useFileUpload, useUpdateFileUpload } from "@/lib/hooks";
 import FileUploadForm from "@/components/admin/file-uploads/FileUploadForm";
 import type { FileUpload } from "@/lib/api";
 
-type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at" | "account"> & { account: number };
+type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at" | "account" | "headers"> & { account_id: number };
 
 export default function EditFileUploadPage({
   params,

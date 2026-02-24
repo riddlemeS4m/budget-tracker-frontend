@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Account } from "@/lib/api";
+import { AccountTypeEnum } from "@/lib/api";
 
 const ACCOUNT_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "checking", label: "Checking" },
@@ -46,7 +47,7 @@ export default function AccountForm({ initial = {}, onSubmit }: AccountFormProps
 
     setSubmitting(true);
     try {
-      await onSubmit({ name, type, file_upload_schema });
+      await onSubmit({ name, type: type as AccountTypeEnum, file_upload_schema });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred.");
     } finally {

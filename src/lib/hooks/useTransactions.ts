@@ -1,10 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   TransactionsService,
-  type TransactionFilters,
-  type TransactionWrite,
+  type Transaction,
+  type PaginatedTransactionList,
   type PatchedTransaction,
 } from "../api";
+
+export type TransactionFilters = {
+  account?: number;
+  description?: string;
+  file_upload?: number;
+  sort_by?: string;
+  transaction_date_from?: string;
+  transaction_date_to?: string;
+};
 
 export const transactionKeys = {
   all: ["transactions"] as const,
@@ -16,9 +25,19 @@ export const transactionKeys = {
 };
 
 export function useTransactions(page: number = 1, pageSize: number = 100, filters?: TransactionFilters) {
-  return useQuery({
+  return useQuery<PaginatedTransactionList>({
     queryKey: transactionKeys.list({ page, pageSize, ...filters }),
-    queryFn: () => TransactionsService.transactionsList(page, pageSize, filters),
+    queryFn: () =>
+      TransactionsService.transactionsList(
+        filters?.account,
+        filters?.description,
+        filters?.file_upload,
+        page,
+        pageSize,
+        filters?.sort_by,
+        filters?.transaction_date_from,
+        filters?.transaction_date_to,
+      ),
   });
 }
 
@@ -34,7 +53,7 @@ export function useCreateTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TransactionWrite) =>
+    mutationFn: (data: Transaction) =>
       TransactionsService.transactionsCreate(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });

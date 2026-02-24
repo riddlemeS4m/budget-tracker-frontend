@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAccounts, useFileUploads } from "@/lib/hooks";
-import type { TransactionFilters } from "@/lib/api";
+import { useAccounts, useFileUploads, type TransactionFilters } from "@/lib/hooks";
 
 interface TransactionFiltersProps {
   filters: TransactionFilters;

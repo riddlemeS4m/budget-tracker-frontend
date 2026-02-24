@@ -17,11 +17,12 @@ export default function SchemaWizardPage({
   const { data: fileUpload, isLoading, isError: fileUploadError } =
     useFileUpload(fileUploadId);
 
+  const account = fileUpload?.account;
+
   const updateAccount = useUpdateAccount();
   const processFileUpload = useProcessFileUpload();
 
-  const account = fileUpload?.account;
-  const headers = fileUpload?.headers ?? [];
+  const headers: string[] = fileUpload?.headers ? JSON.parse(fileUpload.headers) : [];
 
   async function handleSave(schema: FileUploadSchema) {
     if (!account) throw new Error("Account not loaded.");

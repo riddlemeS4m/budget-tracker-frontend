@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FileUpload } from "@/lib/api";
+import { StatusEnum } from "@/lib/api";
 
-type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at" | "account" | "headers"> & { account: number };
+type FileUploadFormData = Omit<FileUpload, "id" | "created_at" | "updated_at" | "account" | "headers"> & { account_id: number };
 
 interface FileUploadFormProps {
   initial?: Partial<FileUpload>;
@@ -32,10 +33,10 @@ export default function FileUploadForm({
     setSubmitting(true);
     try {
       await onSubmit({
-        account: Number(account),
+        account_id: Number(account),
         filename,
         transaction_count: Number(transactionCount),
-        status,
+        status: status as StatusEnum,
         errors: errors || null,
       });
     } catch (err: unknown) {

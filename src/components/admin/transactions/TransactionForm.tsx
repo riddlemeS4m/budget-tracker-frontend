@@ -7,8 +7,8 @@ import { useAccounts } from "@/lib/hooks/useAccounts";
 import { useFileUploads } from "@/lib/hooks/useFileUploads";
 
 type TransactionFormData = {
-  account: number;
-  file_upload: number | null;
+  account_id: number;
+  file_upload_id: number | null;
   transaction_date: string | null;
   posted_date: string | null;
   description: string | null;
@@ -64,8 +64,8 @@ export default function TransactionForm({
     setSubmitting(true);
     try {
       await onSubmit({
-        account: Number(account),
-        file_upload: fileUpload !== "" ? Number(fileUpload) : null,
+        account_id: Number(account),
+        file_upload_id: fileUpload !== "" ? Number(fileUpload) : null,
         transaction_date: transactionDate || null,
         posted_date: null,
         description: description || null,
