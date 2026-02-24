@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTransactions, type TransactionFilters } from "@/lib/hooks";
 import TransactionRow from "@/components/admin/transactions/TransactionRow";
 import TransactionFiltersBar from "@/components/admin/transactions/TransactionFilters";
@@ -11,9 +12,17 @@ import Pagination from "@/components/core/Pagination";
 const PAGE_SIZE = 100;
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+function getInitialFilters(searchParams: URLSearchParams): TransactionFilters {
+  const filters: TransactionFilters = {};
+  const locationSubclassification = searchParams.get("location_subclassification");
+  if (locationSubclassification) filters.location_subclassification = Number(locationSubclassification);
+  return filters;
+}
+
 export default function TransactionsListPage() {
+  const searchParams = useSearchParams();
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<TransactionFilters>({});
+  const [filters, setFilters] = useState<TransactionFilters>(() => getInitialFilters(searchParams));
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 

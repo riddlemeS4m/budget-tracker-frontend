@@ -26,7 +26,12 @@ export default function LocationSubclassificationRow({
         {locationSubclassification.location_classification.type}
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-        {locationSubclassification.transaction_count}
+        <Link
+          href={`/admin/transactions?location_subclassification=${locationSubclassification.id}`}
+          className="text-blue-600 dark:text-blue-400 hover:underline"
+        >
+          {locationSubclassification.transaction_count}
+        </Link>
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
         {new Date(locationSubclassification.created_at).toLocaleDateString()}
