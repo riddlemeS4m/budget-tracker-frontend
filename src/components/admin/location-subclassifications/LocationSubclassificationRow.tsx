@@ -26,10 +26,10 @@ export default function LocationSubclassificationRow({
         {locationSubclassification.location_classification.type}
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-        {new Date(locationSubclassification.created_at).toLocaleDateString()}
+        {locationSubclassification.transaction_count}
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-        {new Date(locationSubclassification.updated_at).toLocaleDateString()}
+        {new Date(locationSubclassification.created_at).toLocaleDateString()}
       </td>
       <td className="px-3 py-2 text-sm space-x-3">
         <Link

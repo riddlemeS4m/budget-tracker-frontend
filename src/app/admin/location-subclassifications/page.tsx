@@ -1,11 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useLocationSubclassifications } from "@/lib/hooks";
 import LocationSubclassificationRow from "@/components/admin/location-subclassifications/LocationSubclassificationRow";
+import SortableHeader from "@/components/admin/transactions/SortableHeader";
+import type { LocationSubClassification } from "@/lib/api";
+
+type SortKey = keyof Pick<
+  LocationSubClassification,
+  "id" | "name" | "transaction_count" | "created_at"
+>;
 
 export default function LocationSubclassificationsListPage() {
   const { data, isLoading, isError } = useLocationSubclassifications();
+  const [sortKey, setSortKey] = useState<string | null>("id");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  function handleSort(key: string) {
+    if (key === sortKey) {
+      if (sortDir === "asc") {
+        setSortDir("desc");
+      } else {
+        setSortKey(null);
+      }
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
+
+  const sorted = (() => {
+    if (!data) return [];
+    if (!sortKey) return data;
+    return [...data].sort((a, b) => {
+      const av = a[sortKey as SortKey];
+      const bv = b[sortKey as SortKey];
+      let cmp = 0;
+      if (typeof av === "number" && typeof bv === "number") {
+        cmp = av - bv;
+      } else {
+        cmp = String(av).localeCompare(String(bv));
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  })();
 
   return (
     <div>
@@ -32,31 +71,47 @@ export default function LocationSubclassificationsListPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Name
-              </th>
+              <SortableHeader
+                label="ID"
+                field="id"
+                currentField={sortKey}
+                currentDir={sortDir}
+                onSort={handleSort}
+              />
+              <SortableHeader
+                label="Name"
+                field="name"
+                currentField={sortKey}
+                currentDir={sortDir}
+                onSort={handleSort}
+              />
               <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Location Classification
               </th>
               <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Type
               </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Created
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Updated
-              </th>
+              <SortableHeader
+                label="Transactions"
+                field="transaction_count"
+                currentField={sortKey}
+                currentDir={sortDir}
+                onSort={handleSort}
+              />
+              <SortableHeader
+                label="Created"
+                field="created_at"
+                currentField={sortKey}
+                currentDir={sortDir}
+                onSort={handleSort}
+              />
               <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {data.map((lsc) => (
+            {sorted.map((lsc) => (
               <LocationSubclassificationRow
                 key={lsc.id}
                 locationSubclassification={lsc}

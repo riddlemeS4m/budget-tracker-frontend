@@ -8,6 +8,7 @@ export type PatchedLocationSubClassification = {
     readonly location_classification?: LocationClassification;
     location_classification_id?: number;
     name?: string;
+    readonly transaction_count?: number;
     readonly created_at?: string;
     readonly updated_at?: string;
 };
