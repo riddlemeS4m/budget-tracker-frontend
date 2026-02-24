@@ -9,6 +9,7 @@ import SortableHeader from "@/components/admin/transactions/SortableHeader";
 import Pagination from "@/components/core/Pagination";
 
 const PAGE_SIZE = 100;
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function TransactionsListPage() {
   const [page, setPage] = useState(1);
@@ -35,6 +36,19 @@ export default function TransactionsListPage() {
     setPage(1);
   }
 
+  function handleExportCsv() {
+    const sort_by = sortField ? `${sortDir === "desc" ? "-" : ""}${sortField}` : undefined;
+    const params = new URLSearchParams();
+    const activeFilters: Record<string, string | number | undefined> = { ...filters, sort_by };
+    for (const [key, value] of Object.entries(activeFilters)) {
+      if (value !== undefined && value !== "") {
+        params.set(key, String(value));
+      }
+    }
+    const query = params.toString();
+    window.open(`${API_BASE}/api/v1/transactions/export/${query ? `?${query}` : ""}`, "_blank");
+  }
+
   const sort_by = sortField ? `${sortDir === "desc" ? "-" : ""}${sortField}` : undefined;
   const { data, isLoading, isError } = useTransactions(page, PAGE_SIZE, { ...filters, sort_by });
 
@@ -46,12 +60,20 @@ export default function TransactionsListPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold">Transactions</h1>
-        <Link
-          href="/admin/transactions/new"
-          className="px-3 py-2 text-sm bg-gray-900 dark:bg-gray-700 text-white rounded hover:bg-gray-700 dark:hover:bg-gray-600"
-        >
-          Add Transaction
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCsv}
+            className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            Export CSV
+          </button>
+          <Link
+            href="/admin/transactions/new"
+            className="px-3 py-2 text-sm bg-gray-900 dark:bg-gray-700 text-white rounded hover:bg-gray-700 dark:hover:bg-gray-600"
+          >
+            Add Transaction
+          </Link>
+        </div>
       </div>
 
       <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} />
