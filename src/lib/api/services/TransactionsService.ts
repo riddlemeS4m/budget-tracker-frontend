@@ -2,43 +2,48 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { PaginatedTransactionList } from '../models/PaginatedTransactionList';
 import type { PatchedTransaction } from '../models/PatchedTransaction';
 import type { Transaction } from '../models/Transaction';
-import type { TransactionWrite } from '../models/TransactionWrite';
-import type { PaginatedResponse } from '../models/PaginatedResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export type TransactionFilters = {
-    account?: number;
-    file_upload?: number;
-    transaction_date_from?: string;
-    transaction_date_to?: string;
-    description?: string;
-    sort_by?: string;
-};
-
 export class TransactionsService {
     /**
-     * Handles GET /transactions/ with pagination and optional filters
+     * Handles GET /transactions/ and POST /transactions/
+     * @param account Filter by account ID
+     * @param description Filter by description (case-insensitive substring match)
+     * @param fileUpload Filter by file upload ID
      * @param page Page number (1-indexed)
      * @param pageSize Items per page
-     * @param filters Optional filter params
-     * @returns PaginatedResponse<Transaction>
+     * @param sortBy Sort field, optionally prefixed with '-' for descending (e.g. '-amount'). Allowed values: id, account__name, transaction_date, description, amount, category, subcategory. Defaults to -created_at.
+     * @param transactionDateFrom Filter transactions on or after this date (ISO 8601, e.g. 2025-01-01)
+     * @param transactionDateTo Filter transactions on or before this date (ISO 8601, e.g. 2025-12-31)
+     * @returns PaginatedTransactionList
      * @throws ApiError
      */
     public static transactionsList(
-        page: number = 1,
-        pageSize: number = 100,
-        filters?: TransactionFilters,
-    ): CancelablePromise<PaginatedResponse<Transaction>> {
+        account?: number,
+        description?: string,
+        fileUpload?: number,
+        page?: number,
+        pageSize?: number,
+        sortBy?: string,
+        transactionDateFrom?: string,
+        transactionDateTo?: string,
+    ): CancelablePromise<PaginatedTransactionList> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/transactions/',
             query: {
-                page,
-                page_size: pageSize,
-                ...filters,
+                'account': account,
+                'description': description,
+                'file_upload': fileUpload,
+                'page': page,
+                'page_size': pageSize,
+                'sort_by': sortBy,
+                'transaction_date_from': transactionDateFrom,
+                'transaction_date_to': transactionDateTo,
             },
         });
     }
@@ -49,7 +54,7 @@ export class TransactionsService {
      * @throws ApiError
      */
     public static transactionsCreate(
-        requestBody: TransactionWrite,
+        requestBody: Transaction,
     ): CancelablePromise<Transaction> {
         return __request(OpenAPI, {
             method: 'POST',

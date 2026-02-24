@@ -3,15 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Account } from './Account';
+import type { StatusEnum } from './StatusEnum';
 export type FileUpload = {
     readonly id: number;
+    readonly account: Account;
+    account_id: number;
     filename: string;
-    transaction_count: number;
-    status: string;
+    readonly headers: string;
+    transaction_count?: number;
+    status?: StatusEnum;
     errors?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
-    account: Account;
-    readonly headers: string[];
 };
 

@@ -2,12 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AccountTypeEnum } from './AccountTypeEnum';
-export type PatchedAccount = {
+export type PatchedTimeClassification = {
     readonly id?: number;
     name?: string;
-    type?: AccountTypeEnum;
-    file_upload_schema?: any;
     readonly created_at?: string;
     readonly updated_at?: string;
 };

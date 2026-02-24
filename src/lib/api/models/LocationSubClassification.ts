@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AccountTypeEnum } from './AccountTypeEnum';
-export type Account = {
+import type { LocationClassification } from './LocationClassification';
+export type LocationSubClassification = {
     readonly id: number;
+    readonly location_classification: LocationClassification;
+    location_classification_id: number;
     name: string;
-    type?: AccountTypeEnum;
-    file_upload_schema?: any;
     readonly created_at: string;
     readonly updated_at: string;
 };

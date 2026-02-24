@@ -7,29 +7,7 @@ import type { PatchedFileUpload } from '../models/PatchedFileUpload';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-
-function getBaseUrl(): string {
-    return OpenAPI.BASE || "http://localhost:8000";
-}
-
 export class FileUploadsService {
-    static async uploadFile(file: File, accountId: number): Promise<FileUpload> {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("account", String(accountId));
-
-        const response = await fetch(`${getBaseUrl()}/api/v1/file-uploads/`, {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) {
-            const body = await response.json().catch(() => ({}));
-            throw new Error(body.detail ?? `Upload failed: ${response.status}`);
-        }
-
-        return response.json();
-    }
     /**
      * @returns FileUpload
      * @throws ApiError
@@ -41,18 +19,24 @@ export class FileUploadsService {
         });
     }
     /**
-     * @param requestBody
+     * POST /api/v1/file-uploads/
+     * Accepts multipart/form-data with:
+     * - account_id: account ID (required)
+     * - file: a CSV file (optional)
+     * When a file is provided, parses it and creates one Transaction per row.
+     * Applies the account schema immediately if one exists.
+     * @param formData
      * @returns FileUpload
      * @throws ApiError
      */
     public static fileUploadsCreate(
-        requestBody: FileUpload,
+        formData: FileUpload,
     ): CancelablePromise<FileUpload> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/file-uploads/',
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -125,6 +109,28 @@ export class FileUploadsService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * POST /api/v1/file-uploads/{id}/process/
+     * Re-processes all transactions for this FileUpload using the account schema.
+     * @param id A unique integer value identifying this file upload.
+     * @param requestBody
+     * @returns FileUpload
+     * @throws ApiError
+     */
+    public static fileUploadsProcess(
+        id: number,
+        requestBody: FileUpload,
+    ): CancelablePromise<FileUpload> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/file-uploads/{id}/process/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }
