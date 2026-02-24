@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 interface SidebarLinkProps {
   href: string;
   label: string;
+  exact?: boolean;
 }
 
-export default function SidebarLink({ href, label }: SidebarLinkProps) {
+export default function SidebarLink({ href, label, exact = false }: SidebarLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname.startsWith(href);
+  const isActive = exact ? pathname === href : pathname.startsWith(href);
 
   return (
     <Link

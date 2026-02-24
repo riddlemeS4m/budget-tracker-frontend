@@ -20,6 +20,12 @@ export default function Sidebar() {
       <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3 px-3">
         Admin
       </p>
+      <ul className="mb-3">
+        <li>
+          <SidebarLink href="/admin" label="Home" exact />
+        </li>
+      </ul>
+      <hr className="my-3 border-gray-200 dark:border-gray-700" />
       <ul>
         {coreNavItems.map((item) => (
           <li key={item.href}>
