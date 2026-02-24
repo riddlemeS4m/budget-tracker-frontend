@@ -9,6 +9,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { Account } from './models/Account';
 export { AccountTypeEnum } from './models/AccountTypeEnum';
+export type { CashFlowStatementMonthly } from './models/CashFlowStatementMonthly';
+export type { CashFlowStatementSummary } from './models/CashFlowStatementSummary';
 export type { FileUpload } from './models/FileUpload';
 export type { LocationClassification } from './models/LocationClassification';
 export { LocationClassificationTypeEnum } from './models/LocationClassificationTypeEnum';
@@ -33,6 +35,7 @@ export { FileUploadsService } from './services/FileUploadsService';
 export { LocationClassificationsService } from './services/LocationClassificationsService';
 export { LocationSubclassificationsService } from './services/LocationSubclassificationsService';
 export { PersonClassificationsService } from './services/PersonClassificationsService';
+export { ReportsService } from './services/ReportsService';
 export { SchemaService } from './services/SchemaService';
 export { StatementsService } from './services/StatementsService';
 export { TimeClassificationsService } from './services/TimeClassificationsService';

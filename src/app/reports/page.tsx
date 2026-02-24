@@ -1,18 +1,19 @@
+import Link from "next/link";
+
 const sections = [
   {
-    heading: "Spending",
-    items: [
-      { label: "Monthly Summary", description: "Overview of income and expenses by month." },
-      { label: "Category Breakdown", description: "Spending totals grouped by classification." },
-      { label: "Trends", description: "Spending patterns and changes over time." },
-    ],
+    href: "/reports/exploration",
+    label: "Exploration",
+    description:
+      "Ad-hoc reports with flexible date range filtering. Use these to drill into specific time periods and answer questions about your finances.",
+    reports: ["Cash Flow Statement"],
   },
   {
-    heading: "Accounts",
-    items: [
-      { label: "Account Balances", description: "Current and historical balances per account." },
-      { label: "Statement History", description: "Transaction totals across statements." },
-    ],
+    href: "/reports/audit",
+    label: "Audit",
+    description:
+      "Fixed-period reports spanning full calendar years. Use these for year-end review, tax preparation, and month-over-month comparison.",
+    reports: ["Cash Flow Statement"],
   },
 ];
 
@@ -21,30 +22,26 @@ export default function ReportsHomePage() {
     <div className="max-w-2xl">
       <h1 className="text-xl font-semibold mb-1">Reports</h1>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-        Reports are coming soon. Below is a preview of what will be available.
+        Choose a section to get started.
       </p>
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {sections.map((section) => (
-          <div key={section.heading}>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
-              {section.heading}
+          <Link
+            key={section.href}
+            href={section.href}
+            className="block p-5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-sm transition-all"
+          >
+            <p className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+              {section.label}
             </p>
-            <ul className="space-y-1">
-              {section.items.map((item) => (
-                <li key={item.label}>
-                  <div className="flex items-baseline gap-3 px-3 py-2 rounded text-gray-400 dark:text-gray-600">
-                    <span className="text-sm font-medium w-48 shrink-0">
-                      {item.label}
-                    </span>
-                    <span className="text-sm">
-                      {item.description}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+              {section.description}
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              {section.reports.join(" · ")}
+            </p>
+          </Link>
         ))}
       </div>
     </div>
