@@ -284,7 +284,18 @@ export default function TransactionForm({
             </label>
             <select
               value={locationSubclassification}
-              onChange={(e) => setLocationSubclassification(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setLocationSubclassification(value);
+                if (value && locationSubclassifications) {
+                  const selected = locationSubclassifications.find(
+                    (s) => String(s.id) === value
+                  );
+                  if (selected) {
+                    setLocationClassification(String(selected.location_classification.id));
+                  }
+                }
+              }}
               disabled={locationSubclassificationsLoading}
               className={inputClass}
             >
