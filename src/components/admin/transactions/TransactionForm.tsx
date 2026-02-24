@@ -2,13 +2,33 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import type { Transaction } from "@/lib/api";
+import type {
+  Transaction,
+  LocationClassification,
+  LocationSubClassification,
+  PersonClassification,
+  TimeClassification,
+} from "@/lib/api";
+import { LocationClassificationTypeEnum } from "@/lib/api/models/LocationClassificationTypeEnum";
 import { useAccounts } from "@/lib/hooks/useAccounts";
 import { useFileUploads } from "@/lib/hooks/useFileUploads";
-import { useLocationClassifications } from "@/lib/hooks/useLocationClassifications";
-import { useLocationSubclassifications } from "@/lib/hooks/useLocationSubclassifications";
-import { usePersonClassifications } from "@/lib/hooks/usePersonClassifications";
-import { useTimeClassifications } from "@/lib/hooks/useTimeClassifications";
+import {
+  useLocationClassifications,
+  useCreateLocationClassification,
+} from "@/lib/hooks/useLocationClassifications";
+import {
+  useLocationSubclassifications,
+  useCreateLocationSubclassification,
+} from "@/lib/hooks/useLocationSubclassifications";
+import {
+  usePersonClassifications,
+  useCreatePersonClassification,
+} from "@/lib/hooks/usePersonClassifications";
+import {
+  useTimeClassifications,
+  useCreateTimeClassification,
+} from "@/lib/hooks/useTimeClassifications";
+import ClassificationSelect from "./ClassificationSelect";
 
 type TransactionFormData = {
   account_id: number;
@@ -44,6 +64,11 @@ export default function TransactionForm({
   const { data: personClassifications, isLoading: personClassificationsLoading } = usePersonClassifications();
   const { data: timeClassifications, isLoading: timeClassificationsLoading } = useTimeClassifications();
 
+  const createLocClass = useCreateLocationClassification();
+  const createLocSubClass = useCreateLocationSubclassification();
+  const createPersonClass = useCreatePersonClassification();
+  const createTimeClass = useCreateTimeClassification();
+
   const [account, setAccount] = useState(String(initial.account?.id ?? ""));
   const [fileUpload, setFileUpload] = useState(String(initial.file_upload?.id ?? ""));
   const [transactionDate, setTransactionDate] = useState(
@@ -71,6 +96,11 @@ export default function TransactionForm({
   const [rawDataText, setRawDataText] = useState(
     initial.raw_data ? JSON.stringify(initial.raw_data, null, 2) : "{}"
   );
+  const [newLocType, setNewLocType] = useState<LocationClassificationTypeEnum>(
+    LocationClassificationTypeEnum.EXPENSE
+  );
+  const [newSubLocParent, setNewSubLocParent] = useState("");
+
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -259,95 +289,128 @@ export default function TransactionForm({
             <label className={labelClass}>
               Location Classification <span className={optionalClass}>(optional)</span>
             </label>
-            <select
+            <ClassificationSelect
               value={locationClassification}
-              onChange={(e) => {
-                setLocationClassification(e.target.value);
+              onChange={(v) => {
+                setLocationClassification(v);
                 setLocationSubclassification("");
               }}
-              disabled={locationClassificationsLoading}
-              className={inputClass}
-            >
-              <option value="">
-                {locationClassificationsLoading ? "Loading…" : "None"}
-              </option>
-              {locationClassifications?.map((lc) => (
-                <option key={lc.id} value={String(lc.id)}>
-                  {lc.name}
-                </option>
-              ))}
-            </select>
+              options={locationClassifications ?? []}
+              loading={locationClassificationsLoading}
+              addLabel="Add location"
+              onSaveNew={async (name) => {
+                const result = await createLocClass.mutateAsync({
+                  name,
+                  type: newLocType,
+                } as unknown as LocationClassification);
+                return result;
+              }}
+              renderExtraFields={() => (
+                <select
+                  value={newLocType}
+                  onChange={(e) =>
+                    setNewLocType(
+                      e.target.value as LocationClassificationTypeEnum
+                    )
+                  }
+                  className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                  <option value="transfer">Transfer</option>
+                </select>
+              )}
+              onStartAdding={() =>
+                setNewLocType(LocationClassificationTypeEnum.EXPENSE)
+              }
+            />
           </div>
           <div>
             <label className={labelClass}>
               Location Subclassification <span className={optionalClass}>(optional)</span>
             </label>
-            <select
+            <ClassificationSelect
               value={locationSubclassification}
-              onChange={(e) => {
-                const value = e.target.value;
-                setLocationSubclassification(value);
-                if (value && locationSubclassifications) {
+              onChange={(v) => {
+                setLocationSubclassification(v);
+                if (v && locationSubclassifications) {
                   const selected = locationSubclassifications.find(
-                    (s) => String(s.id) === value
+                    (s) => String(s.id) === v
                   );
                   if (selected) {
-                    setLocationClassification(String(selected.location_classification.id));
+                    setLocationClassification(
+                      String(selected.location_classification.id)
+                    );
                   }
                 }
               }}
-              disabled={locationSubclassificationsLoading}
-              className={inputClass}
-            >
-              <option value="">
-                {locationSubclassificationsLoading ? "Loading…" : "None"}
-              </option>
-              {filteredSubclassifications.map((ls) => (
-                <option key={ls.id} value={String(ls.id)}>
-                  {ls.name}
-                </option>
-              ))}
-            </select>
+              options={filteredSubclassifications}
+              loading={locationSubclassificationsLoading}
+              addLabel="Add sublocation"
+              onSaveNew={async (name) => {
+                const parentId = Number(newSubLocParent);
+                if (!parentId) throw new Error("Select a parent location.");
+                const result = await createLocSubClass.mutateAsync({
+                  name,
+                  location_classification_id: parentId,
+                } as unknown as LocationSubClassification);
+                setLocationClassification(String(parentId));
+                return result;
+              }}
+              renderExtraFields={() => (
+                <select
+                  value={newSubLocParent}
+                  onChange={(e) => setNewSubLocParent(e.target.value)}
+                  className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="">Select parent location</option>
+                  {locationClassifications?.map((lc) => (
+                    <option key={lc.id} value={String(lc.id)}>
+                      {lc.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              onStartAdding={() =>
+                setNewSubLocParent(locationClassification)
+              }
+            />
           </div>
           <div>
             <label className={labelClass}>
               Person Classification <span className={optionalClass}>(optional)</span>
             </label>
-            <select
+            <ClassificationSelect
               value={personClassification}
-              onChange={(e) => setPersonClassification(e.target.value)}
-              disabled={personClassificationsLoading}
-              className={inputClass}
-            >
-              <option value="">
-                {personClassificationsLoading ? "Loading…" : "None"}
-              </option>
-              {personClassifications?.map((pc) => (
-                <option key={pc.id} value={String(pc.id)}>
-                  {pc.name}
-                </option>
-              ))}
-            </select>
+              onChange={setPersonClassification}
+              options={personClassifications ?? []}
+              loading={personClassificationsLoading}
+              addLabel="Add person"
+              onSaveNew={async (name) => {
+                const result = await createPersonClass.mutateAsync({
+                  name,
+                } as unknown as PersonClassification);
+                return result;
+              }}
+            />
           </div>
           <div>
             <label className={labelClass}>
               Time Classification <span className={optionalClass}>(optional)</span>
             </label>
-            <select
+            <ClassificationSelect
               value={timeClassification}
-              onChange={(e) => setTimeClassification(e.target.value)}
-              disabled={timeClassificationsLoading}
-              className={inputClass}
-            >
-              <option value="">
-                {timeClassificationsLoading ? "Loading…" : "None"}
-              </option>
-              {timeClassifications?.map((tc) => (
-                <option key={tc.id} value={String(tc.id)}>
-                  {tc.name}
-                </option>
-              ))}
-            </select>
+              onChange={setTimeClassification}
+              options={timeClassifications ?? []}
+              loading={timeClassificationsLoading}
+              addLabel="Add time period"
+              onSaveNew={async (name) => {
+                const result = await createTimeClass.mutateAsync({
+                  name,
+                } as unknown as TimeClassification);
+                return result;
+              }}
+            />
           </div>
         </div>
       </div>
