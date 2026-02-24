@@ -10,7 +10,11 @@ export type TransactionFilters = {
   account?: number;
   description?: string;
   file_upload?: number;
+  location_classification?: number;
+  location_subclassification?: number;
+  person_classification?: number;
   sort_by?: string;
+  time_classification?: number;
   transaction_date_from?: string;
   transaction_date_to?: string;
 };
@@ -32,9 +36,13 @@ export function useTransactions(page: number = 1, pageSize: number = 100, filter
         filters?.account,
         filters?.description,
         filters?.file_upload,
+        filters?.location_classification,
+        filters?.location_subclassification,
         page,
         pageSize,
+        filters?.person_classification,
         filters?.sort_by,
+        filters?.time_classification,
         filters?.transaction_date_from,
         filters?.transaction_date_to,
       ),

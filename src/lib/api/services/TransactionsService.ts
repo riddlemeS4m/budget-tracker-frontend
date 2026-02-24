@@ -14,9 +14,13 @@ export class TransactionsService {
      * @param account Filter by account ID
      * @param description Filter by description (case-insensitive substring match)
      * @param fileUpload Filter by file upload ID
+     * @param locationClassification Filter by location classification ID
+     * @param locationSubclassification Filter by location subclassification ID
      * @param page Page number (1-indexed)
      * @param pageSize Items per page
+     * @param personClassification Filter by person classification ID
      * @param sortBy Sort field, optionally prefixed with '-' for descending (e.g. '-amount'). Allowed values: id, account__name, transaction_date, description, amount, category, subcategory. Defaults to -created_at.
+     * @param timeClassification Filter by time classification ID
      * @param transactionDateFrom Filter transactions on or after this date (ISO 8601, e.g. 2025-01-01)
      * @param transactionDateTo Filter transactions on or before this date (ISO 8601, e.g. 2025-12-31)
      * @returns PaginatedTransactionList
@@ -26,9 +30,13 @@ export class TransactionsService {
         account?: number,
         description?: string,
         fileUpload?: number,
+        locationClassification?: number,
+        locationSubclassification?: number,
         page?: number,
         pageSize?: number,
+        personClassification?: number,
         sortBy?: string,
+        timeClassification?: number,
         transactionDateFrom?: string,
         transactionDateTo?: string,
     ): CancelablePromise<PaginatedTransactionList> {
@@ -39,9 +47,13 @@ export class TransactionsService {
                 'account': account,
                 'description': description,
                 'file_upload': fileUpload,
+                'location_classification': locationClassification,
+                'location_subclassification': locationSubclassification,
                 'page': page,
                 'page_size': pageSize,
+                'person_classification': personClassification,
                 'sort_by': sortBy,
+                'time_classification': timeClassification,
                 'transaction_date_from': transactionDateFrom,
                 'transaction_date_to': transactionDateTo,
             },
