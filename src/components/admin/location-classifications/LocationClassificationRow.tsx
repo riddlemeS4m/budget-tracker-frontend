@@ -18,10 +18,13 @@ export default function LocationClassificationRow({
         {locationClassification.type}
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-        {new Date(locationClassification.created_at).toLocaleDateString()}
+        {locationClassification.subcategory_count}
       </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-        {new Date(locationClassification.updated_at).toLocaleDateString()}
+        {locationClassification.transaction_count}
+      </td>
+      <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+        {new Date(locationClassification.created_at).toLocaleDateString()}
       </td>
       <td className="px-3 py-2 text-sm space-x-3">
         <Link

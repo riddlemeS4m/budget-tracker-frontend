@@ -7,6 +7,8 @@ export type PatchedLocationClassification = {
     readonly id?: number;
     name?: string;
     type?: LocationClassificationTypeEnum;
+    readonly transaction_count?: number;
+    readonly subcategory_count?: number;
     readonly created_at?: string;
     readonly updated_at?: string;
 };

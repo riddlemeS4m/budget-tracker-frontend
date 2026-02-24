@@ -130,4 +130,48 @@ export class TransactionsService {
             },
         });
     }
+    /**
+     * Handles GET /transactions/export/ — streams all matching transactions as a CSV file.
+     * @param account Filter by account ID
+     * @param description Filter by description (case-insensitive substring match)
+     * @param fileUpload Filter by file upload ID
+     * @param locationClassification Filter by location classification ID
+     * @param locationSubclassification Filter by location subclassification ID
+     * @param personClassification Filter by person classification ID
+     * @param sortBy Sort field, optionally prefixed with '-' for descending
+     * @param timeClassification Filter by time classification ID
+     * @param transactionDateFrom Filter transactions on or after this date (ISO 8601)
+     * @param transactionDateTo Filter transactions on or before this date (ISO 8601)
+     * @returns any No response body
+     * @throws ApiError
+     */
+    public static transactionsExport(
+        account?: number,
+        description?: string,
+        fileUpload?: number,
+        locationClassification?: number,
+        locationSubclassification?: number,
+        personClassification?: number,
+        sortBy?: string,
+        timeClassification?: number,
+        transactionDateFrom?: string,
+        transactionDateTo?: string,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/transactions/export/',
+            query: {
+                'account': account,
+                'description': description,
+                'file_upload': fileUpload,
+                'location_classification': locationClassification,
+                'location_subclassification': locationSubclassification,
+                'person_classification': personClassification,
+                'sort_by': sortBy,
+                'time_classification': timeClassification,
+                'transaction_date_from': transactionDateFrom,
+                'transaction_date_to': transactionDateTo,
+            },
+        });
+    }
 }
