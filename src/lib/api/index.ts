@@ -19,9 +19,11 @@ export type { PatchedFileUpload } from './models/PatchedFileUpload';
 export type { PatchedLocationClassification } from './models/PatchedLocationClassification';
 export type { PatchedLocationSubClassification } from './models/PatchedLocationSubClassification';
 export type { PatchedPersonClassification } from './models/PatchedPersonClassification';
+export type { PatchedStatement } from './models/PatchedStatement';
 export type { PatchedTimeClassification } from './models/PatchedTimeClassification';
 export type { PatchedTransaction } from './models/PatchedTransaction';
 export type { PersonClassification } from './models/PersonClassification';
+export type { Statement } from './models/Statement';
 export { StatusEnum } from './models/StatusEnum';
 export type { TimeClassification } from './models/TimeClassification';
 export type { Transaction } from './models/Transaction';
@@ -32,5 +34,6 @@ export { LocationClassificationsService } from './services/LocationClassificatio
 export { LocationSubclassificationsService } from './services/LocationSubclassificationsService';
 export { PersonClassificationsService } from './services/PersonClassificationsService';
 export { SchemaService } from './services/SchemaService';
+export { StatementsService } from './services/StatementsService';
 export { TimeClassificationsService } from './services/TimeClassificationsService';
 export { TransactionsService } from './services/TransactionsService';
