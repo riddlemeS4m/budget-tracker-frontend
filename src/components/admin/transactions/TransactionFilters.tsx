@@ -14,11 +14,12 @@ import {
 interface TransactionFiltersProps {
   filters: TransactionFilters;
   onChange: (filters: TransactionFilters) => void;
+  resultCount?: number;
 }
 
 const DESCRIPTION_DEBOUNCE_MS = 300;
 
-export default function TransactionFiltersBar({ filters, onChange }: TransactionFiltersProps) {
+export default function TransactionFiltersBar({ filters, onChange, resultCount }: TransactionFiltersProps) {
   const { data: accountsData } = useAccounts();
   const { data: fileUploadsData } = useFileUploads();
   const { data: locationClassificationsData } = useLocationClassifications();
@@ -256,6 +257,12 @@ export default function TransactionFiltersBar({ filters, onChange }: Transaction
           </select>
         </div>
       </div>
+
+      {resultCount !== undefined && (
+        <p className="text-sm text-gray-400 dark:text-gray-500">
+          {resultCount} {resultCount === 1 ? "result" : "results"}
+        </p>
+      )}
     </div>
   );
 }

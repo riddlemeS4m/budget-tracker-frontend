@@ -76,7 +76,7 @@ export default function TransactionsListPage() {
         </div>
       </div>
 
-      <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} />
+      <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} resultCount={data ? totalCount : undefined} />
 
       {isLoading && <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>}
       {isError && <p className="text-sm text-red-600 dark:text-red-400">Failed to load transactions.</p>}

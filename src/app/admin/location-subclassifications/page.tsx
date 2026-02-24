@@ -60,7 +60,7 @@ export default function LocationSubclassificationsListPage() {
         </Link>
       </div>
 
-      <LocationSubclassificationFiltersBar filters={filters} onChange={setFilters} />
+      <LocationSubclassificationFiltersBar filters={filters} onChange={setFilters} resultCount={data?.length} />
 
       {isLoading && (
         <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>

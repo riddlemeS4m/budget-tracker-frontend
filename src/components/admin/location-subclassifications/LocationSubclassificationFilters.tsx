@@ -6,6 +6,7 @@ import { useLocationClassifications, type LocationSubclassificationFilters } fro
 interface LocationSubclassificationFiltersProps {
   filters: LocationSubclassificationFilters;
   onChange: (filters: LocationSubclassificationFilters) => void;
+  resultCount?: number;
 }
 
 const NAME_DEBOUNCE_MS = 300;
@@ -19,6 +20,7 @@ const TYPE_OPTIONS = [
 export default function LocationSubclassificationFiltersBar({
   filters,
   onChange,
+  resultCount,
 }: LocationSubclassificationFiltersProps) {
   const { data: locationClassificationsData } = useLocationClassifications();
 
@@ -118,6 +120,12 @@ export default function LocationSubclassificationFiltersBar({
           </button>
         )}
       </div>
+
+      {resultCount !== undefined && (
+        <p className="text-sm text-gray-400 dark:text-gray-500">
+          {resultCount} {resultCount === 1 ? "result" : "results"}
+        </p>
+      )}
     </div>
   );
 }
