@@ -3,6 +3,7 @@ import SidebarLink from "./SidebarLink";
 const coreNavItems = [
   { href: "/admin/accounts", label: "Accounts" },
   { href: "/admin/file-uploads", label: "File Uploads" },
+  { href: "/admin/statements", label: "Statements" },
   { href: "/admin/transactions", label: "Transactions" },
 ];
 

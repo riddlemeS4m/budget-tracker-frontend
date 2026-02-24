@@ -1,4 +1,5 @@
 export * from "./useAccounts";
+export * from "./useStatements";
 export * from "./useTransactions";
 export * from "./useFileUploads";
 export * from "./useFileUploadActions";
