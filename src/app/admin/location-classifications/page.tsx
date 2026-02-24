@@ -1,11 +1,59 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useLocationClassifications } from "@/lib/hooks";
 import LocationClassificationRow from "@/components/admin/location-classifications/LocationClassificationRow";
+import SortableHeader from "@/components/admin/transactions/SortableHeader";
+import type { LocationClassification } from "@/lib/api";
+
+type SortKey = keyof Pick<
+  LocationClassification,
+  "id" | "name" | "type" | "subcategory_count" | "transaction_count" | "created_at"
+>;
+
+const COLUMNS: { key: SortKey; label: string }[] = [
+  { key: "id", label: "ID" },
+  { key: "name", label: "Name" },
+  { key: "type", label: "Type" },
+  { key: "subcategory_count", label: "Subcategories" },
+  { key: "transaction_count", label: "Transactions" },
+  { key: "created_at", label: "Created" },
+];
 
 export default function LocationClassificationsListPage() {
   const { data, isLoading, isError } = useLocationClassifications();
+  const [sortKey, setSortKey] = useState<string | null>("id");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  function handleSort(key: string) {
+    if (key === sortKey) {
+      if (sortDir === "asc") {
+        setSortDir("desc");
+      } else {
+        setSortKey(null);
+      }
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
+
+  const sorted = (() => {
+    if (!data) return [];
+    if (!sortKey) return data;
+    return [...data].sort((a, b) => {
+      const av = a[sortKey as SortKey];
+      const bv = b[sortKey as SortKey];
+      let cmp = 0;
+      if (typeof av === "number" && typeof bv === "number") {
+        cmp = av - bv;
+      } else {
+        cmp = String(av).localeCompare(String(bv));
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  })();
 
   return (
     <div>
@@ -32,31 +80,23 @@ export default function LocationClassificationsListPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Subcategories
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Transactions
-              </th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Created
-              </th>
+              {COLUMNS.map(({ key, label }) => (
+                <SortableHeader
+                  key={key}
+                  label={label}
+                  field={key}
+                  currentField={sortKey}
+                  currentDir={sortDir}
+                  onSort={handleSort}
+                />
+              ))}
               <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {data.map((lc) => (
+            {sorted.map((lc) => (
               <LocationClassificationRow
                 key={lc.id}
                 locationClassification={lc}
