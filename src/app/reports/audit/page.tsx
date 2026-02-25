@@ -7,6 +7,12 @@ const reports = [
       "View revenues and expenses across all 12 months for a given calendar year, with YTD totals.",
     href: "/reports/audit/cash-flow-statement",
   },
+  {
+    title: "Account Cash Flow",
+    description:
+      "View revenues and expenses for a single account and calendar year, grouped by category.",
+    href: "/reports/audit/account-cash-flow",
+  },
 ];
 
 export default function AuditIndexPage() {
