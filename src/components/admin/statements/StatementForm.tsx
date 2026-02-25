@@ -3,7 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Statement } from "@/lib/api";
+import { ApiError } from "@/lib/api/core/ApiError";
 import { useAccounts } from "@/lib/hooks";
+
+function extractApiErrors(err: unknown): string {
+  if (err instanceof ApiError && err.body && typeof err.body === "object") {
+    const messages: string[] = [];
+    for (const [key, value] of Object.entries(err.body)) {
+      const items = Array.isArray(value) ? value : [value];
+      if (key === "non_field_errors" || key === "detail") {
+        messages.push(...items.map(String));
+      } else {
+        messages.push(...items.map((v) => `${key}: ${v}`));
+      }
+    }
+    if (messages.length > 0) return messages.join(" ");
+  }
+  if (err instanceof Error) return err.message;
+  return "An error occurred.";
+}
 
 type StatementFormData = Omit<Statement, "id" | "created_at" | "updated_at" | "account"> & { account_id: number };
 
@@ -40,7 +58,7 @@ export default function StatementForm({
         closing_balance: closingBalance,
       });
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : "An error occurred.");
+      setFormError(extractApiErrors(err));
     } finally {
       setSubmitting(false);
     }
