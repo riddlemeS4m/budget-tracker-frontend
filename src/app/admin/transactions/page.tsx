@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransactions, type TransactionFilters } from "@/lib/hooks";
@@ -59,9 +60,12 @@ function buildSearchParams(
   return params;
 }
 
+const STORAGE_KEY = "txFilterState";
+
 export default function TransactionsListPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isInitialMount = useRef(true);
 
   const filters = parseFiltersFromParams(searchParams);
   const page = Number(searchParams.get("page") ?? "1") || 1;
@@ -78,6 +82,30 @@ export default function TransactionsListPage() {
     const query = params.toString();
     router.replace(`/admin/transactions${query ? `?${query}` : ""}`, { scroll: false });
   }
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (searchParams.toString() === "") {
+        try {
+          const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "null");
+          if (saved) {
+            const p = buildSearchParams(
+              saved.filters ?? {},
+              saved.page ?? 1,
+              saved.sortField ?? null,
+              saved.sortDir ?? "asc",
+            );
+            if (p.toString()) {
+              router.replace(`/admin/transactions?${p.toString()}`, { scroll: false });
+              return;
+            }
+          }
+        } catch { /* corrupted storage, ignore */ }
+      }
+    }
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ filters, page, sortField, sortDir }));
+  });
 
   function handleFiltersChange(newFilters: TransactionFilters) {
     updateUrl(newFilters, 1, sortField, sortDir);
