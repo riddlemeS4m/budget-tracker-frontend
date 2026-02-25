@@ -12,6 +12,7 @@ export class StatementsService {
      * @param account Filter by account ID
      * @param dateFrom Filter statements with period_end on or after this date (ISO 8601, e.g. 2025-01-01)
      * @param dateTo Filter statements with period_end on or before this date (ISO 8601, e.g. 2025-12-31)
+     * @param sortBy Sort field. Prefix with "-" for descending. Allowed: id, account__name, period_start, period_end, opening_balance, closing_balance.
      * @returns Statement
      * @throws ApiError
      */
@@ -19,6 +20,7 @@ export class StatementsService {
         account?: number,
         dateFrom?: string,
         dateTo?: string,
+        sortBy?: string,
     ): CancelablePromise<Array<Statement>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -27,6 +29,7 @@ export class StatementsService {
                 'account': account,
                 'date_from': dateFrom,
                 'date_to': dateTo,
+                'sort_by': sortBy,
             },
         });
     }

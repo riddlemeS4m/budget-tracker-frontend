@@ -9,6 +9,7 @@ export type StatementFilters = {
   account?: number;
   date_from?: string;
   date_to?: string;
+  sort_by?: string;
 };
 
 export const statementKeys = {
@@ -28,6 +29,7 @@ export function useStatements(filters?: StatementFilters) {
         filters?.account,
         filters?.date_from,
         filters?.date_to,
+        filters?.sort_by,
       ),
   });
 }

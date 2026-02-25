@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useStatements, type StatementFilters } from "@/lib/hooks";
 import StatementRow from "@/components/admin/statements/StatementRow";
 import StatementFiltersBar from "@/components/admin/statements/StatementFilters";
+import SortableHeader from "@/components/admin/transactions/SortableHeader";
 
 function parseFiltersFromParams(params: URLSearchParams): StatementFilters {
   const filters: StatementFilters = {};
@@ -17,11 +18,19 @@ function parseFiltersFromParams(params: URLSearchParams): StatementFilters {
   return filters;
 }
 
-function buildSearchParams(filters: StatementFilters): URLSearchParams {
+function buildSearchParams(
+  filters: StatementFilters,
+  sortField: string | null,
+  sortDir: "asc" | "desc",
+): URLSearchParams {
   const params = new URLSearchParams();
   if (filters.account) params.set("account", String(filters.account));
   if (filters.date_from) params.set("date_from", filters.date_from);
   if (filters.date_to) params.set("date_to", filters.date_to);
+  if (sortField) {
+    params.set("sort", sortField);
+    if (sortDir === "desc") params.set("dir", "desc");
+  }
   return params;
 }
 
@@ -30,14 +39,38 @@ export default function StatementsListPage() {
   const searchParams = useSearchParams();
 
   const filters = parseFiltersFromParams(searchParams);
+  const sortField = searchParams.get("sort") || null;
+  const sortDir: "asc" | "desc" = searchParams.get("dir") === "desc" ? "desc" : "asc";
 
-  const { data, isLoading, isError } = useStatements(filters);
-
-  function handleFiltersChange(newFilters: StatementFilters) {
-    const params = buildSearchParams(newFilters);
+  function updateUrl(
+    newFilters: StatementFilters,
+    newSortField: string | null,
+    newSortDir: "asc" | "desc",
+  ) {
+    const params = buildSearchParams(newFilters, newSortField, newSortDir);
     const query = params.toString();
     router.replace(`/admin/statements${query ? `?${query}` : ""}`, { scroll: false });
   }
+
+  function handleFiltersChange(newFilters: StatementFilters) {
+    updateUrl(newFilters, sortField, sortDir);
+  }
+
+  function handleSort(field: string) {
+    let newField: string | null = field;
+    let newDir: "asc" | "desc" = "asc";
+    if (field === sortField) {
+      if (sortDir === "asc") {
+        newDir = "desc";
+      } else {
+        newField = null;
+      }
+    }
+    updateUrl(filters, newField, newDir);
+  }
+
+  const sort_by = sortField ? `${sortDir === "desc" ? "-" : ""}${sortField}` : undefined;
+  const { data, isLoading, isError } = useStatements({ ...filters, sort_by });
 
   const statements = data ?? [];
 
@@ -66,12 +99,12 @@ export default function StatementsListPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Account</th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Period Start</th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Period End</th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Opening Balance</th>
-              <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Closing Balance</th>
+              <SortableHeader label="ID" field="id" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+              <SortableHeader label="Account" field="account__name" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+              <SortableHeader label="Period Start" field="period_start" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+              <SortableHeader label="Period End" field="period_end" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+              <SortableHeader label="Opening Balance" field="opening_balance" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
+              <SortableHeader label="Closing Balance" field="closing_balance" currentField={sortField} currentDir={sortDir} onSort={handleSort} />
               <th className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
