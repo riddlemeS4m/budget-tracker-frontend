@@ -22,7 +22,7 @@ export default function SchemaWizardPage({
   const updateAccount = useUpdateAccount();
   const processFileUpload = useProcessFileUpload();
 
-  const headers: string[] = fileUpload?.headers ? JSON.parse(fileUpload.headers) : [];
+  const headers: string[] = fileUpload?.headers ?? [];
 
   async function handleSave(schema: FileUploadSchema) {
     if (!account) throw new Error("Account not loaded.");

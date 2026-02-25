@@ -9,7 +9,7 @@ export type PatchedFileUpload = {
     readonly account?: Account;
     account_id?: number;
     filename?: string;
-    readonly headers?: string;
+    readonly headers?: Array<string>;
     transaction_count?: number;
     status?: StatusEnum;
     errors?: string | null;
