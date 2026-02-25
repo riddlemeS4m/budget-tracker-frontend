@@ -1,11 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { useStatements } from "@/lib/hooks";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useStatements, type StatementFilters } from "@/lib/hooks";
 import StatementRow from "@/components/admin/statements/StatementRow";
+import StatementFiltersBar from "@/components/admin/statements/StatementFilters";
+
+function parseFiltersFromParams(params: URLSearchParams): StatementFilters {
+  const filters: StatementFilters = {};
+  const account = params.get("account");
+  if (account) filters.account = Number(account);
+  const dateFrom = params.get("date_from");
+  if (dateFrom) filters.date_from = dateFrom;
+  const dateTo = params.get("date_to");
+  if (dateTo) filters.date_to = dateTo;
+  return filters;
+}
+
+function buildSearchParams(filters: StatementFilters): URLSearchParams {
+  const params = new URLSearchParams();
+  if (filters.account) params.set("account", String(filters.account));
+  if (filters.date_from) params.set("date_from", filters.date_from);
+  if (filters.date_to) params.set("date_to", filters.date_to);
+  return params;
+}
 
 export default function StatementsListPage() {
-  const { data, isLoading, isError } = useStatements();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const filters = parseFiltersFromParams(searchParams);
+
+  const { data, isLoading, isError } = useStatements(filters);
+
+  function handleFiltersChange(newFilters: StatementFilters) {
+    const params = buildSearchParams(newFilters);
+    const query = params.toString();
+    router.replace(`/admin/statements${query ? `?${query}` : ""}`, { scroll: false });
+  }
+
+  const statements = data ?? [];
 
   return (
     <div>
@@ -18,6 +52,12 @@ export default function StatementsListPage() {
           Add Statement
         </Link>
       </div>
+
+      <StatementFiltersBar
+        filters={filters}
+        onChange={handleFiltersChange}
+        resultCount={data ? statements.length : undefined}
+      />
 
       {isLoading && <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>}
       {isError && <p className="text-sm text-red-600 dark:text-red-400">Failed to load statements.</p>}
@@ -36,14 +76,14 @@ export default function StatementsListPage() {
             </tr>
           </thead>
           <tbody>
-            {data.map((statement) => (
+            {statements.map((statement) => (
               <StatementRow key={statement.id} statement={statement} />
             ))}
           </tbody>
         </table>
       )}
 
-      {data?.length === 0 && (
+      {statements.length === 0 && !isLoading && (
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">No statements found.</p>
       )}
     </div>

@@ -35,6 +35,12 @@ export default function StatementDetailPage({
         <h1 className="text-xl font-semibold">Statement #{data.id}</h1>
         <div className="flex gap-3">
           <Link
+            href={`/admin/statements/new?account_id=${data.account.id}`}
+            className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
+          >
+            Add
+          </Link>
+          <Link
             href={`/admin/statements/${data.id}/edit`}
             className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
           >

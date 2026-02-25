@@ -9,13 +9,25 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class StatementsService {
     /**
+     * @param account Filter by account ID
+     * @param dateFrom Filter statements with period_end on or after this date (ISO 8601, e.g. 2025-01-01)
+     * @param dateTo Filter statements with period_end on or before this date (ISO 8601, e.g. 2025-12-31)
      * @returns Statement
      * @throws ApiError
      */
-    public static statementsList(): CancelablePromise<Array<Statement>> {
+    public static statementsList(
+        account?: number,
+        dateFrom?: string,
+        dateTo?: string,
+    ): CancelablePromise<Array<Statement>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/statements/',
+            query: {
+                'account': account,
+                'date_from': dateFrom,
+                'date_to': dateTo,
+            },
         });
     }
     /**

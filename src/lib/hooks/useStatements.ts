@@ -5,6 +5,12 @@ import {
   type PatchedStatement,
 } from "../api";
 
+export type StatementFilters = {
+  account?: number;
+  date_from?: string;
+  date_to?: string;
+};
+
 export const statementKeys = {
   all: ["statements"] as const,
   lists: () => [...statementKeys.all, "list"] as const,
@@ -14,10 +20,15 @@ export const statementKeys = {
   detail: (id: number) => [...statementKeys.details(), id] as const,
 };
 
-export function useStatements() {
+export function useStatements(filters?: StatementFilters) {
   return useQuery({
-    queryKey: statementKeys.lists(),
-    queryFn: () => StatementsService.statementsList(),
+    queryKey: statementKeys.list(filters),
+    queryFn: () =>
+      StatementsService.statementsList(
+        filters?.account,
+        filters?.date_from,
+        filters?.date_to,
+      ),
   });
 }
 
