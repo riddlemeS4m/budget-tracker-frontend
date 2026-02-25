@@ -81,10 +81,11 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
     "text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1.5 min-w-36";
 
   return (
+    // Outer container matches TransactionFiltersBar exactly
     <div className="flex flex-col gap-3 mb-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded border border-gray-200 dark:border-gray-700">
-      {/* Controls row: dropdowns + buttons, all bottom-aligned */}
+
+      {/* Row 1 — location fields (mirrors primary filters row height) */}
       <div className="flex flex-wrap gap-3 items-end">
-        {/* Location */}
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Location
@@ -107,7 +108,6 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
           </select>
         </div>
 
-        {/* Sublocation */}
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Sublocation
@@ -126,8 +126,10 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
             ))}
           </select>
         </div>
+      </div>
 
-        {/* Time */}
+      {/* Row 2 — time/person fields + actions (mirrors classification filters row, with border-t) */}
+      <div className="flex flex-wrap gap-3 items-end pt-2.5 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Time
@@ -147,7 +149,6 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
           </select>
         </div>
 
-        {/* Person */}
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Person
@@ -167,7 +168,6 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
           </select>
         </div>
 
-        {/* Apply + Cancel — bottom-aligned, immediately after last dropdown */}
         {batchUpdate.isError && (
           <span className="text-xs text-red-600 dark:text-red-400 self-end pb-1.5">Failed to update.</span>
         )}
@@ -186,7 +186,7 @@ export default function BatchUpdateBar({ selectedIds, onClear }: BatchUpdateBarP
         </button>
       </div>
 
-      {/* Selected count — below controls, like "x results" in the filters bar */}
+      {/* Row 3 — selection count (mirrors result count row) */}
       <p className="text-sm text-gray-400 dark:text-gray-500">
         {count} transaction{count !== 1 ? "s" : ""} selected
       </p>

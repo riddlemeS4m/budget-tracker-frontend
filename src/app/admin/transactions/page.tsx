@@ -214,10 +214,10 @@ export default function TransactionsListPage() {
         </div>
       </div>
 
-      <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} resultCount={data ? totalCount : undefined} />
-
-      {selectedIds.size > 0 && (
+      {selectedIds.size > 0 ? (
         <BatchUpdateBar selectedIds={selectedIds} onClear={clearSelection} />
+      ) : (
+        <TransactionFiltersBar filters={filters} onChange={handleFiltersChange} resultCount={data ? totalCount : undefined} />
       )}
 
       {isLoading && <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>}
