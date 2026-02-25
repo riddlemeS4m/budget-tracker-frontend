@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTransactions, type TransactionFilters } from "@/lib/hooks";
 import TransactionRow from "@/components/admin/transactions/TransactionRow";
 import TransactionFiltersBar from "@/components/admin/transactions/TransactionFilters";
@@ -12,37 +11,89 @@ import Pagination from "@/components/core/Pagination";
 const PAGE_SIZE = 100;
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-function getInitialFilters(searchParams: URLSearchParams): TransactionFilters {
+const NUMERIC_FILTER_KEYS: (keyof TransactionFilters)[] = [
+  "account",
+  "file_upload",
+  "location_classification",
+  "location_subclassification",
+  "person_classification",
+  "time_classification",
+];
+
+const STRING_FILTER_KEYS: (keyof TransactionFilters)[] = [
+  "description",
+  "transaction_date_from",
+  "transaction_date_to",
+];
+
+function parseFiltersFromParams(params: URLSearchParams): TransactionFilters {
   const filters: TransactionFilters = {};
-  const locationSubclassification = searchParams.get("location_subclassification");
-  if (locationSubclassification) filters.location_subclassification = Number(locationSubclassification);
+  for (const key of NUMERIC_FILTER_KEYS) {
+    const val = params.get(key);
+    if (val) (filters[key] as number) = Number(val);
+  }
+  for (const key of STRING_FILTER_KEYS) {
+    const val = params.get(key);
+    if (val) (filters[key] as string) = val;
+  }
   return filters;
 }
 
+function buildSearchParams(
+  filters: TransactionFilters,
+  page: number,
+  sortField: string | null,
+  sortDir: "asc" | "desc",
+): URLSearchParams {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(filters)) {
+    if (value !== undefined && value !== "" && key !== "sort_by") {
+      params.set(key, String(value));
+    }
+  }
+  if (page > 1) params.set("page", String(page));
+  if (sortField) {
+    params.set("sort", sortField);
+    if (sortDir === "desc") params.set("dir", "desc");
+  }
+  return params;
+}
+
 export default function TransactionsListPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<TransactionFilters>(() => getInitialFilters(searchParams));
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  const filters = parseFiltersFromParams(searchParams);
+  const page = Number(searchParams.get("page") ?? "1") || 1;
+  const sortField = searchParams.get("sort") || null;
+  const sortDir: "asc" | "desc" = searchParams.get("dir") === "desc" ? "desc" : "asc";
+
+  function updateUrl(
+    newFilters: TransactionFilters,
+    newPage: number,
+    newSortField: string | null,
+    newSortDir: "asc" | "desc",
+  ) {
+    const params = buildSearchParams(newFilters, newPage, newSortField, newSortDir);
+    const query = params.toString();
+    router.replace(`/admin/transactions${query ? `?${query}` : ""}`, { scroll: false });
+  }
 
   function handleFiltersChange(newFilters: TransactionFilters) {
-    setFilters(newFilters);
-    setPage(1);
+    updateUrl(newFilters, 1, sortField, sortDir);
   }
 
   function handleSort(field: string) {
+    let newField: string | null = field;
+    let newDir: "asc" | "desc" = "asc";
     if (field === sortField) {
       if (sortDir === "asc") {
-        setSortDir("desc");
+        newDir = "desc";
       } else {
-        setSortField(null);
+        newField = null;
       }
-    } else {
-      setSortField(field);
-      setSortDir("asc");
     }
-    setPage(1);
+    updateUrl(filters, 1, newField, newDir);
   }
 
   function handleExportCsv() {
@@ -116,7 +167,7 @@ export default function TransactionsListPage() {
             page={page}
             totalPages={totalPages}
             totalCount={totalCount}
-            onPageChange={setPage}
+            onPageChange={(p) => updateUrl(filters, p, sortField, sortDir)}
             noun="transactions"
           />
         </>
