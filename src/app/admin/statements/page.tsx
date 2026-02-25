@@ -1,11 +1,14 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStatements, type StatementFilters } from "@/lib/hooks";
 import StatementRow from "@/components/admin/statements/StatementRow";
 import StatementFiltersBar from "@/components/admin/statements/StatementFilters";
 import SortableHeader from "@/components/admin/transactions/SortableHeader";
+
+const STORAGE_KEY = "stmtFilterState";
 
 function parseFiltersFromParams(params: URLSearchParams): StatementFilters {
   const filters: StatementFilters = {};
@@ -37,10 +40,34 @@ function buildSearchParams(
 export default function StatementsListPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isInitialMount = useRef(true);
 
   const filters = parseFiltersFromParams(searchParams);
   const sortField = searchParams.get("sort") || null;
   const sortDir: "asc" | "desc" = searchParams.get("dir") === "desc" ? "desc" : "asc";
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (searchParams.toString() === "") {
+        try {
+          const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "null");
+          if (saved) {
+            const p = buildSearchParams(
+              saved.filters ?? {},
+              saved.sortField ?? null,
+              saved.sortDir ?? "asc",
+            );
+            if (p.toString()) {
+              router.replace(`/admin/statements?${p.toString()}`, { scroll: false });
+              return;
+            }
+          }
+        } catch { /* corrupted storage, ignore */ }
+      }
+    }
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ filters, sortField, sortDir }));
+  });
 
   function updateUrl(
     newFilters: StatementFilters,
