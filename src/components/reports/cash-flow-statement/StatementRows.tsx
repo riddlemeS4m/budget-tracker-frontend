@@ -1,6 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import type { CashFlowSection, CashFlowCategory, CashFlowSubcategory } from "@/lib/hooks/useCashFlowStatement";
+import { buildTransactionDrillUrl } from "@/lib/utils/reportLinks";
+
+interface DrillContext {
+  dateFrom?: string;
+  dateTo?: string;
+  accountId?: number;
+}
 
 function formatAmount(value: string): string {
   const num = parseFloat(value);
@@ -31,12 +39,29 @@ export function SectionHeaderRow({ label }: SectionHeaderRowProps) {
 
 interface SubcategoryRowProps {
   subcategory: CashFlowSubcategory;
+  drill?: DrillContext;
 }
 
-export function SubcategoryRow({ subcategory }: SubcategoryRowProps) {
+export function SubcategoryRow({ subcategory, drill }: SubcategoryRowProps) {
+  const nameNode =
+    subcategory.id && drill ? (
+      <Link
+        href={buildTransactionDrillUrl({
+          locationSubclassification: subcategory.id,
+          dateFrom: drill.dateFrom,
+          dateTo: drill.dateTo,
+          account: drill.accountId,
+        })}
+        className="hover:underline hover:text-blue-600 dark:hover:text-blue-400"
+      >
+        {subcategory.name}
+      </Link>
+    ) : (
+      subcategory.name
+    );
   return (
     <div className="flex items-baseline justify-between py-0.5 pl-10">
-      <span className="text-sm text-gray-700 dark:text-gray-300">{subcategory.name}</span>
+      <span className="text-sm text-gray-700 dark:text-gray-300">{nameNode}</span>
       <span className={`text-sm tabular-nums ml-4 shrink-0 ${amountClass(subcategory.total)}`}>
         {formatAmount(subcategory.total)}
       </span>
@@ -46,18 +71,35 @@ export function SubcategoryRow({ subcategory }: SubcategoryRowProps) {
 
 interface CategoryRowsProps {
   category: CashFlowCategory;
+  drill?: DrillContext;
 }
 
-export function CategoryRows({ category }: CategoryRowsProps) {
+export function CategoryRows({ category, drill }: CategoryRowsProps) {
+  const nameNode =
+    category.id && drill ? (
+      <Link
+        href={buildTransactionDrillUrl({
+          locationClassification: category.id,
+          dateFrom: drill.dateFrom,
+          dateTo: drill.dateTo,
+          account: drill.accountId,
+        })}
+        className="hover:underline hover:text-blue-600 dark:hover:text-blue-400"
+      >
+        {category.name}
+      </Link>
+    ) : (
+      category.name
+    );
   return (
     <>
       <div className="flex items-baseline justify-between py-1 pl-4 mt-2">
         <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-          {category.name}
+          {nameNode}
         </span>
       </div>
       {category.subcategories.map((sub, i) => (
-        <SubcategoryRow key={sub.id ?? `sub-${i}`} subcategory={sub} />
+        <SubcategoryRow key={sub.id ?? `sub-${i}`} subcategory={sub} drill={drill} />
       ))}
       <div className="flex items-baseline justify-between py-1 pl-10 border-t border-gray-200 dark:border-gray-700 mt-1">
         <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -111,6 +153,9 @@ interface StatementBodyProps {
   totalRevenues: string;
   totalExpenses: string;
   netIncome: string;
+  dateFrom?: string;
+  dateTo?: string;
+  accountId?: number;
 }
 
 export function StatementBody({
@@ -118,9 +163,16 @@ export function StatementBody({
   totalRevenues,
   totalExpenses,
   netIncome,
+  dateFrom,
+  dateTo,
+  accountId,
 }: StatementBodyProps) {
   const revenues = sections.find((s) => s.type === "income");
   const expenses = sections.find((s) => s.type === "expense");
+  const drill: DrillContext | undefined =
+    dateFrom || dateTo || accountId !== undefined
+      ? { dateFrom, dateTo, accountId }
+      : undefined;
 
   return (
     <div className="font-mono text-sm">
@@ -128,7 +180,7 @@ export function StatementBody({
         <div className="mb-2">
           <SectionHeaderRow label="Revenues" />
           {revenues.categories.map((cat, i) => (
-            <CategoryRows key={cat.id ?? `cat-${i}`} category={cat} />
+            <CategoryRows key={cat.id ?? `cat-${i}`} category={cat} drill={drill} />
           ))}
           <SectionTotalRow label="Total Revenues" total={totalRevenues} />
         </div>
@@ -138,7 +190,7 @@ export function StatementBody({
         <div className="mb-2">
           <SectionHeaderRow label="Expenses" />
           {expenses.categories.map((cat, i) => (
-            <CategoryRows key={cat.id ?? `cat-${i}`} category={cat} />
+            <CategoryRows key={cat.id ?? `cat-${i}`} category={cat} drill={drill} />
           ))}
           <SectionTotalRow label="Total Expenses" total={totalExpenses} />
         </div>

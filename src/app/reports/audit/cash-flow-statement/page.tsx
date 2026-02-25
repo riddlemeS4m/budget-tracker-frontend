@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   useCashFlowStatementMonthly,
   type CashFlowSectionMonthly,
@@ -8,6 +9,7 @@ import {
   type CashFlowSubcategoryMonthly,
   type MonthlyTotals,
 } from "@/lib/hooks/useCashFlowStatement";
+import { buildTransactionDrillUrl } from "@/lib/utils/reportLinks";
 
 function fmt(value: string): string {
   const num = parseFloat(value);
@@ -40,14 +42,36 @@ function SectionHeaderRow({ label }: { label: string }) {
   );
 }
 
-function CategoryHeaderRow({ name }: { name: string }) {
+function CategoryHeaderRow({
+  name,
+  id,
+  year,
+}: {
+  name: string;
+  id: number | null;
+  year: number;
+}) {
+  const label = id ? (
+    <Link
+      href={buildTransactionDrillUrl({
+        locationClassification: id,
+        dateFrom: `${year}-01-01`,
+        dateTo: `${year}-12-31`,
+      })}
+      className="hover:underline hover:text-blue-600 dark:hover:text-blue-400"
+    >
+      {name}
+    </Link>
+  ) : (
+    name
+  );
   return (
     <tr>
       <td
         colSpan={14}
         className="sticky left-0 z-10 bg-white dark:bg-gray-950 pl-6 pr-4 py-1.5 text-sm font-semibold text-gray-800 dark:text-gray-200"
       >
-        {name}
+        {label}
       </td>
     </tr>
   );
@@ -55,15 +79,29 @@ function CategoryHeaderRow({ name }: { name: string }) {
 
 function SubcategoryRow({
   sub,
-  months,
+  year,
 }: {
   sub: CashFlowSubcategoryMonthly;
-  months: string[];
+  year: number;
 }) {
+  const label = sub.id ? (
+    <Link
+      href={buildTransactionDrillUrl({
+        locationSubclassification: sub.id,
+        dateFrom: `${year}-01-01`,
+        dateTo: `${year}-12-31`,
+      })}
+      className="hover:underline hover:text-blue-600 dark:hover:text-blue-400"
+    >
+      {sub.name}
+    </Link>
+  ) : (
+    sub.name
+  );
   return (
     <tr className="hover:bg-gray-50 dark:hover:bg-gray-900/50">
       <td className="sticky left-0 z-10 bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900/50 pl-10 pr-4 py-1 text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap min-w-[180px]">
-        {sub.name}
+        {label}
       </td>
       {MONTH_KEYS.map((m) => (
         <td
@@ -159,22 +197,24 @@ function SectionRows({
   section,
   months,
   sectionTotals,
+  year,
 }: {
   section: CashFlowSectionMonthly;
   months: string[];
   sectionTotals: { months: Record<string, string>; ytd: string };
+  year: number;
 }) {
   return (
     <>
       <SectionHeaderRow label={section.label} />
       {section.categories.map((cat, ci) => (
         <React.Fragment key={`cat-${cat.id ?? ci}`}>
-          <CategoryHeaderRow name={cat.name} />
+          <CategoryHeaderRow name={cat.name} id={cat.id} year={year} />
           {cat.subcategories.map((sub, si) => (
             <SubcategoryRow
               key={`sub-${sub.id ?? si}`}
               sub={sub}
-              months={months}
+              year={year}
             />
           ))}
           <CategoryTotalRow category={cat} months={months} />
@@ -278,6 +318,7 @@ export default function AuditCashFlowStatementPage() {
                   section={revenues}
                   months={data.months}
                   sectionTotals={data.total_revenues}
+                  year={year}
                 />
               )}
               {expenses && (
@@ -285,6 +326,7 @@ export default function AuditCashFlowStatementPage() {
                   section={expenses}
                   months={data.months}
                   sectionTotals={data.total_expenses}
+                  year={year}
                 />
               )}
               <NetIncomeRow totals={data.net_income} />

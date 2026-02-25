@@ -119,6 +119,9 @@ export default function ExplorationCashFlowStatementPage() {
           totalRevenues={data.total_revenues}
           totalExpenses={data.total_expenses}
           netIncome={data.net_income}
+          dateFrom={dateFrom || undefined}
+          dateTo={dateTo || undefined}
+          accountId={accountId}
         />
       )}
     </div>

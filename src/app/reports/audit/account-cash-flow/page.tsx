@@ -112,6 +112,9 @@ export default function AuditAccountCashFlowPage() {
           totalRevenues={data.total_revenues}
           totalExpenses={data.total_expenses}
           netIncome={data.net_income}
+          dateFrom={`${year}-01-01`}
+          dateTo={`${year}-12-31`}
+          accountId={accountId}
         />
       )}
     </div>
