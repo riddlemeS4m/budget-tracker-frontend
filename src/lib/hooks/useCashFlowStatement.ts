@@ -72,7 +72,7 @@ export type CashFlowStatementMonthlyData = {
 export const cashFlowStatementKeys = {
   all: ["cash-flow-statement"] as const,
   summaries: () => [...cashFlowStatementKeys.all, "summary"] as const,
-  summary: (filters: { dateFrom?: string; dateTo?: string }) =>
+  summary: (filters: { dateFrom?: string; dateTo?: string; accountId?: number }) =>
     [...cashFlowStatementKeys.summaries(), filters] as const,
   monthlies: () => [...cashFlowStatementKeys.all, "monthly"] as const,
   monthly: (year: number) => [...cashFlowStatementKeys.monthlies(), year] as const,
@@ -81,11 +81,13 @@ export const cashFlowStatementKeys = {
 export function useCashFlowStatementSummary(params: {
   dateFrom?: string;
   dateTo?: string;
+  accountId?: number;
 }) {
   return useQuery({
     queryKey: cashFlowStatementKeys.summary(params),
     queryFn: () =>
       ReportsService.cashFlowStatementSummary(
+        params.accountId,
         params.dateFrom,
         params.dateTo,
       ) as unknown as Promise<CashFlowStatementSummaryData>,

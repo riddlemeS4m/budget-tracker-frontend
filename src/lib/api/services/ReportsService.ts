@@ -27,12 +27,14 @@ export class ReportsService {
     }
     /**
      * GET /api/v1/reports/cash-flow-statement/summary/
+     * @param account Filter by account ID
      * @param dateFrom Start date (ISO 8601, e.g. 2025-01-01)
      * @param dateTo End date (ISO 8601, e.g. 2025-12-31)
      * @returns CashFlowStatementSummary
      * @throws ApiError
      */
     public static cashFlowStatementSummary(
+        account?: number,
         dateFrom?: string,
         dateTo?: string,
     ): CancelablePromise<CashFlowStatementSummary> {
@@ -40,6 +42,7 @@ export class ReportsService {
             method: 'GET',
             url: '/api/v1/reports/cash-flow-statement/summary/',
             query: {
+                'account': account,
                 'date_from': dateFrom,
                 'date_to': dateTo,
             },
