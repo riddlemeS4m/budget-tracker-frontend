@@ -35,6 +35,28 @@ export default function TransactionDetailPage({
         <h1 className="text-xl font-semibold">Transaction #{data.id}</h1>
         <div className="flex gap-3">
           <Link
+            href={`/admin/transactions/new?${new URLSearchParams(
+              Object.fromEntries(
+                Object.entries({
+                  account_id: data.account.id,
+                  description: data.description,
+                  category: data.category,
+                  subcategory: data.subcategory,
+                  amount: data.amount,
+                  location_classification: data.location_classification,
+                  location_subclassification: data.location_subclassification,
+                  person_classification: data.person_classification,
+                  time_classification: data.time_classification,
+                })
+                  .filter(([, v]) => v != null && v !== "")
+                  .map(([k, v]) => [k, String(v)])
+              )
+            ).toString()}`}
+            className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
+          >
+            Add
+          </Link>
+          <Link
             href={`/admin/transactions/${data.id}/edit`}
             className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
           >
