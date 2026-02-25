@@ -4,6 +4,7 @@ import {
   type Transaction,
   type PaginatedTransactionList,
   type PatchedTransaction,
+  type TransactionBatchUpdate,
 } from "../api";
 
 export type TransactionFilters = {
@@ -87,6 +88,18 @@ export function useDeleteTransaction() {
 
   return useMutation({
     mutationFn: (id: number) => TransactionsService.transactionsDestroy(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
+    },
+  });
+}
+
+export function useBatchUpdateTransactions() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: TransactionBatchUpdate) =>
+      TransactionsService.transactionsBatchUpdate(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: transactionKeys.lists() });
     },

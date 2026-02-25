@@ -3,11 +3,28 @@ import type { Transaction } from "@/lib/api";
 
 interface TransactionRowProps {
   transaction: Transaction;
+  selected: boolean;
+  onToggle: (id: number) => void;
 }
 
-export default function TransactionRow({ transaction }: TransactionRowProps) {
+export default function TransactionRow({ transaction, selected, onToggle }: TransactionRowProps) {
   return (
-    <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+    <tr
+      className={
+        selected
+          ? "border-b border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700/60"
+          : "border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+      }
+    >
+      <td className="px-3 py-2 align-middle">
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={() => onToggle(transaction.id)}
+          className="h-3.5 w-3.5 rounded border-gray-300 dark:border-gray-600 accent-gray-700 dark:accent-gray-400 cursor-pointer"
+          aria-label={`Select transaction ${transaction.id}`}
+        />
+      </td>
       <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{transaction.id}</td>
       <td className="px-3 py-2 text-sm truncate max-w-xs">
         {transaction.account.name}

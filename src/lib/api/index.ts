@@ -29,6 +29,8 @@ export type { Statement } from './models/Statement';
 export { StatusEnum } from './models/StatusEnum';
 export type { TimeClassification } from './models/TimeClassification';
 export type { Transaction } from './models/Transaction';
+export type { TransactionBatchUpdate } from './models/TransactionBatchUpdate';
+export type { TransactionBatchUpdateResponse } from './models/TransactionBatchUpdateResponse';
 
 export { AccountsService } from './services/AccountsService';
 export { FileUploadsService } from './services/FileUploadsService';

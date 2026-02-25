@@ -5,6 +5,8 @@
 import type { PaginatedTransactionList } from '../models/PaginatedTransactionList';
 import type { PatchedTransaction } from '../models/PatchedTransaction';
 import type { Transaction } from '../models/Transaction';
+import type { TransactionBatchUpdate } from '../models/TransactionBatchUpdate';
+import type { TransactionBatchUpdateResponse } from '../models/TransactionBatchUpdateResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -128,6 +130,22 @@ export class TransactionsService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * Update classification fields on multiple transactions at once. Only fields present in the request body are modified; omitted fields are left unchanged. Pass null to clear a classification.
+     * @param requestBody
+     * @returns TransactionBatchUpdateResponse
+     * @throws ApiError
+     */
+    public static transactionsBatchUpdate(
+        requestBody: TransactionBatchUpdate,
+    ): CancelablePromise<TransactionBatchUpdateResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/transactions/batch-update/',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**
