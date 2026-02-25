@@ -18,6 +18,7 @@ interface TransactionFiltersProps {
 }
 
 const DESCRIPTION_DEBOUNCE_MS = 300;
+const DATE_DEBOUNCE_MS = 400;
 
 export default function TransactionFiltersBar({ filters, onChange, resultCount }: TransactionFiltersProps) {
   const { data: accountsData } = useAccounts();
@@ -28,11 +29,23 @@ export default function TransactionFiltersBar({ filters, onChange, resultCount }
   const { data: personClassificationsData } = usePersonClassifications();
 
   const [descriptionInput, setDescriptionInput] = useState(filters.description ?? "");
+  const [dateFromInput, setDateFromInput] = useState(filters.transaction_date_from ?? "");
+  const [dateToInput, setDateToInput] = useState(filters.transaction_date_to ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dateFromDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dateToDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setDescriptionInput(filters.description ?? "");
   }, [filters.description]);
+
+  useEffect(() => {
+    setDateFromInput(filters.transaction_date_from ?? "");
+  }, [filters.transaction_date_from]);
+
+  useEffect(() => {
+    setDateToInput(filters.transaction_date_to ?? "");
+  }, [filters.transaction_date_to]);
 
   function handleDescriptionChange(value: string) {
     setDescriptionInput(value);
@@ -42,8 +55,26 @@ export default function TransactionFiltersBar({ filters, onChange, resultCount }
     }, DESCRIPTION_DEBOUNCE_MS);
   }
 
+  function handleDateFromChange(value: string) {
+    setDateFromInput(value);
+    if (dateFromDebounceRef.current) clearTimeout(dateFromDebounceRef.current);
+    dateFromDebounceRef.current = setTimeout(() => {
+      onChange({ ...filters, transaction_date_from: value || undefined });
+    }, DATE_DEBOUNCE_MS);
+  }
+
+  function handleDateToChange(value: string) {
+    setDateToInput(value);
+    if (dateToDebounceRef.current) clearTimeout(dateToDebounceRef.current);
+    dateToDebounceRef.current = setTimeout(() => {
+      onChange({ ...filters, transaction_date_to: value || undefined });
+    }, DATE_DEBOUNCE_MS);
+  }
+
   function handleClear() {
     setDescriptionInput("");
+    setDateFromInput("");
+    setDateToInput("");
     onChange({});
   }
 
@@ -122,10 +153,8 @@ export default function TransactionFiltersBar({ filters, onChange, resultCount }
           </label>
           <input
             type="date"
-            value={filters.transaction_date_from ?? ""}
-            onChange={(e) =>
-              onChange({ ...filters, transaction_date_from: e.target.value || undefined })
-            }
+            value={dateFromInput}
+            onChange={(e) => handleDateFromChange(e.target.value)}
             className="text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1.5"
           />
         </div>
@@ -136,10 +165,8 @@ export default function TransactionFiltersBar({ filters, onChange, resultCount }
           </label>
           <input
             type="date"
-            value={filters.transaction_date_to ?? ""}
-            onChange={(e) =>
-              onChange({ ...filters, transaction_date_to: e.target.value || undefined })
-            }
+            value={dateToInput}
+            onChange={(e) => handleDateToChange(e.target.value)}
             className="text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1.5"
           />
         </div>
