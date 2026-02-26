@@ -13,6 +13,12 @@ const reports = [
       "View revenues and expenses for a single account and calendar year, grouped by category.",
     href: "/reports/audit/account-cash-flow",
   },
+  {
+    title: "Statement Reconciliation",
+    description:
+      "Compare each statement's expected balance change against its transaction totals to surface import gaps or sign issues.",
+    href: "/reports/audit/statement-reconciliation",
+  },
 ];
 
 export default function AuditIndexPage() {

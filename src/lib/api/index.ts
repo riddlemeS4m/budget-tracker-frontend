@@ -26,6 +26,7 @@ export type { PatchedTimeClassification } from './models/PatchedTimeClassificati
 export type { PatchedTransaction } from './models/PatchedTransaction';
 export type { PersonClassification } from './models/PersonClassification';
 export type { Statement } from './models/Statement';
+export type { StatementReconciliation } from './models/StatementReconciliation';
 export { StatusEnum } from './models/StatusEnum';
 export type { TimeClassification } from './models/TimeClassification';
 export type { Transaction } from './models/Transaction';
