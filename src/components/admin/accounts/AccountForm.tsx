@@ -12,6 +12,7 @@ const ACCOUNT_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "investment", label: "Investment" },
   { value: "loan", label: "Loan" },
   { value: "other", label: "Other" },
+  { value: "payroll", label: "Payroll" },
 ];
 
 interface AccountFormProps {

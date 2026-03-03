@@ -9,6 +9,7 @@
  * * `investment` - Investment
  * * `loan` - Loan
  * * `other` - Other
+ * * `payroll` - Payroll
  */
 export enum AccountTypeEnum {
     CHECKING = 'checking',
@@ -17,4 +18,5 @@ export enum AccountTypeEnum {
     INVESTMENT = 'investment',
     LOAN = 'loan',
     OTHER = 'other',
+    PAYROLL = 'payroll',
 }
