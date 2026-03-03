@@ -12,6 +12,7 @@ export { AccountTypeEnum } from './models/AccountTypeEnum';
 export type { CashFlowStatementMonthly } from './models/CashFlowStatementMonthly';
 export type { CashFlowStatementSummary } from './models/CashFlowStatementSummary';
 export type { FileUpload } from './models/FileUpload';
+export type { IncomeExpenseSummary } from './models/IncomeExpenseSummary';
 export type { LocationClassification } from './models/LocationClassification';
 export { LocationClassificationTypeEnum } from './models/LocationClassificationTypeEnum';
 export type { LocationSubClassification } from './models/LocationSubClassification';

@@ -12,6 +12,7 @@ export type TransactionFilters = {
   description?: string;
   file_upload?: number;
   location_classification?: number;
+  location_classification_null?: string;
   location_subclassification?: number;
   person_classification?: number;
   sort_by?: string;
@@ -38,6 +39,7 @@ export function useTransactions(page: number = 1, pageSize: number = 100, filter
         filters?.description,
         filters?.file_upload,
         filters?.location_classification,
+        filters?.location_classification_null,
         filters?.location_subclassification,
         page,
         pageSize,

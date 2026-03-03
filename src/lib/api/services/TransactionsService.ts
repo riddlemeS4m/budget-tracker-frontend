@@ -17,6 +17,7 @@ export class TransactionsService {
      * @param description Filter by description (case-insensitive substring match)
      * @param fileUpload Filter by file upload ID
      * @param locationClassification Filter by location classification ID
+     * @param locationClassificationNull Pass 'true' to filter only transactions with no location classification
      * @param locationSubclassification Filter by location subclassification ID
      * @param page Page number (1-indexed)
      * @param pageSize Items per page
@@ -33,6 +34,7 @@ export class TransactionsService {
         description?: string,
         fileUpload?: number,
         locationClassification?: number,
+        locationClassificationNull?: string,
         locationSubclassification?: number,
         page?: number,
         pageSize?: number,
@@ -50,6 +52,7 @@ export class TransactionsService {
                 'description': description,
                 'file_upload': fileUpload,
                 'location_classification': locationClassification,
+                'location_classification_null': locationClassificationNull,
                 'location_subclassification': locationSubclassification,
                 'page': page,
                 'page_size': pageSize,

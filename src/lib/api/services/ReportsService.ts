@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { CashFlowStatementMonthly } from '../models/CashFlowStatementMonthly';
 import type { CashFlowStatementSummary } from '../models/CashFlowStatementSummary';
+import type { IncomeExpenseSummary } from '../models/IncomeExpenseSummary';
 import type { StatementReconciliation } from '../models/StatementReconciliation';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -42,6 +43,29 @@ export class ReportsService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/reports/cash-flow-statement/summary/',
+            query: {
+                'account': account,
+                'date_from': dateFrom,
+                'date_to': dateTo,
+            },
+        });
+    }
+    /**
+     * GET /api/v1/reports/income-expense-summary/summary/
+     * @param account Filter by account ID
+     * @param dateFrom Start date (ISO 8601, e.g. 2025-01-01)
+     * @param dateTo End date (ISO 8601, e.g. 2025-12-31)
+     * @returns IncomeExpenseSummary
+     * @throws ApiError
+     */
+    public static incomeExpenseSummary(
+        account?: number,
+        dateFrom?: string,
+        dateTo?: string,
+    ): CancelablePromise<IncomeExpenseSummary> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/reports/income-expense-summary/summary/',
             query: {
                 'account': account,
                 'date_from': dateFrom,

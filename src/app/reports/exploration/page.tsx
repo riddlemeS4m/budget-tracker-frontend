@@ -7,6 +7,12 @@ const reports = [
       "View revenues and expenses grouped by category and subcategory for any custom date range.",
     href: "/reports/exploration/cash-flow-statement",
   },
+  {
+    title: "Income / Expense Summary",
+    description:
+      "Revenues and expenses grouped by location classification with totals, percentages, and transaction counts.",
+    href: "/reports/exploration/income-expense-summary",
+  },
 ];
 
 export default function ExplorationIndexPage() {

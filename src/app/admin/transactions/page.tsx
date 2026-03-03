@@ -26,6 +26,7 @@ const STRING_FILTER_KEYS: (keyof TransactionFilters)[] = [
   "description",
   "transaction_date_from",
   "transaction_date_to",
+  "location_classification_null",
 ];
 
 function parseFiltersFromParams(params: URLSearchParams): TransactionFilters {
