@@ -19,6 +19,12 @@ const reports = [
       "Compare each statement's expected balance change against its transaction totals to surface import gaps or sign issues.",
     href: "/reports/audit/statement-reconciliation",
   },
+  {
+    title: "Payroll Breakdown",
+    description:
+      "See where your payroll goes each month: transfers, deductions, and spending as a percentage of gross pay.",
+    href: "/reports/audit/payroll",
+  },
 ];
 
 export default function AuditIndexPage() {

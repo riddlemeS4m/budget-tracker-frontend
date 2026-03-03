@@ -25,6 +25,7 @@ export type { PatchedPersonClassification } from './models/PatchedPersonClassifi
 export type { PatchedStatement } from './models/PatchedStatement';
 export type { PatchedTimeClassification } from './models/PatchedTimeClassification';
 export type { PatchedTransaction } from './models/PatchedTransaction';
+export type { PayrollSummary } from './models/PayrollSummary';
 export type { PersonClassification } from './models/PersonClassification';
 export type { Statement } from './models/Statement';
 export type { StatementReconciliation } from './models/StatementReconciliation';

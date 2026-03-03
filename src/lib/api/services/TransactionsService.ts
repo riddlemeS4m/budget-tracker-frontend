@@ -14,10 +14,13 @@ export class TransactionsService {
     /**
      * Handles GET /transactions/ and POST /transactions/
      * @param account Filter by account ID
+     * @param accountType Filter by account type (e.g. payroll, checking, savings)
      * @param description Filter by description (case-insensitive substring match)
+     * @param excludedAccountType Exclude accounts of the given type (e.g. payroll)
      * @param fileUpload Filter by file upload ID
      * @param locationClassification Filter by location classification ID
      * @param locationClassificationNull Pass 'true' to filter only transactions with no location classification
+     * @param locationClassificationType Filter by location classification type (income, expense, transfer)
      * @param locationSubclassification Filter by location subclassification ID
      * @param page Page number (1-indexed)
      * @param pageSize Items per page
@@ -31,10 +34,13 @@ export class TransactionsService {
      */
     public static transactionsList(
         account?: number,
+        accountType?: string,
         description?: string,
+        excludedAccountType?: string,
         fileUpload?: number,
         locationClassification?: number,
         locationClassificationNull?: string,
+        locationClassificationType?: string,
         locationSubclassification?: number,
         page?: number,
         pageSize?: number,
@@ -49,10 +55,13 @@ export class TransactionsService {
             url: '/api/v1/transactions/',
             query: {
                 'account': account,
+                'account_type': accountType,
                 'description': description,
+                'excluded_account_type': excludedAccountType,
                 'file_upload': fileUpload,
                 'location_classification': locationClassification,
                 'location_classification_null': locationClassificationNull,
+                'location_classification_type': locationClassificationType,
                 'location_subclassification': locationSubclassification,
                 'page': page,
                 'page_size': pageSize,

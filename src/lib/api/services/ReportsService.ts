@@ -5,6 +5,7 @@
 import type { CashFlowStatementMonthly } from '../models/CashFlowStatementMonthly';
 import type { CashFlowStatementSummary } from '../models/CashFlowStatementSummary';
 import type { IncomeExpenseSummary } from '../models/IncomeExpenseSummary';
+import type { PayrollSummary } from '../models/PayrollSummary';
 import type { StatementReconciliation } from '../models/StatementReconciliation';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -68,6 +69,26 @@ export class ReportsService {
             url: '/api/v1/reports/income-expense-summary/summary/',
             query: {
                 'account': account,
+                'date_from': dateFrom,
+                'date_to': dateTo,
+            },
+        });
+    }
+    /**
+     * GET /api/v1/reports/payroll/summary/
+     * @param dateFrom Start date (ISO 8601, e.g. 2025-01-01)
+     * @param dateTo End date (ISO 8601, e.g. 2025-01-31)
+     * @returns PayrollSummary
+     * @throws ApiError
+     */
+    public static payrollSummary(
+        dateFrom?: string,
+        dateTo?: string,
+    ): CancelablePromise<PayrollSummary> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/reports/payroll/summary/',
+            query: {
                 'date_from': dateFrom,
                 'date_to': dateTo,
             },

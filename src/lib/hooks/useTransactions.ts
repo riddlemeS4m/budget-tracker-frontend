@@ -9,10 +9,13 @@ import {
 
 export type TransactionFilters = {
   account?: number;
+  account_type?: string;
   description?: string;
+  excluded_account_type?: string;
   file_upload?: number;
   location_classification?: number;
   location_classification_null?: string;
+  location_classification_type?: string;
   location_subclassification?: number;
   person_classification?: number;
   sort_by?: string;
@@ -36,10 +39,13 @@ export function useTransactions(page: number = 1, pageSize: number = 100, filter
     queryFn: () =>
       TransactionsService.transactionsList(
         filters?.account,
+        filters?.account_type,
         filters?.description,
+        filters?.excluded_account_type,
         filters?.file_upload,
         filters?.location_classification,
         filters?.location_classification_null,
+        filters?.location_classification_type,
         filters?.location_subclassification,
         page,
         pageSize,
